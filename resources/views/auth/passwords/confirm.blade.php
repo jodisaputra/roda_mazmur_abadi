@@ -1,49 +1,94 @@
-@extends('layouts.app')
+@extends('layouts.auth')
+
+@section('title', 'Confirm Password')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Confirm Password') }}</div>
+    <!-- navigation -->
+    <div class="border-bottom shadow-sm">
+        <nav class="navbar navbar-light py-2">
+            <div class="container justify-content-center justify-content-lg-between">
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    <img src="{{ asset('assets/images/logo/freshcart-logo.svg') }}" alt="{{ config('app.name') }}"
+                        class="d-inline-block align-text-top" />
+                </a>
+                <span class="navbar-text">
+                    Need help?
+                    <a href="#!">Contact Support</a>
+                </span>
+            </div>
+        </nav>
+    </div>
 
-                <div class="card-body">
-                    {{ __('Please confirm your password before continuing.') }}
-
-                    <form method="POST" action="{{ route('password.confirm') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+    <main>
+        <!-- section -->
+        <section class="my-lg-14 my-8">
+            <div class="container">
+                <!-- row -->
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-12 col-md-6 col-lg-4 order-lg-1 order-2">
+                        <!-- img -->
+                        <img src="{{ asset('assets/images/svg-graphics/signin-g.svg') }}" alt=""
+                            class="img-fluid" />
+                    </div>
+                    <!-- col -->
+                    <div class="col-12 col-md-6 offset-lg-1 col-lg-4 order-lg-2 order-1">
+                        <div class="mb-lg-9 mb-5">
+                            <h1 class="mb-1 h2 fw-bold">Confirm Password</h1>
+                            <p>{{ __('Please confirm your password before continuing.') }}</p>
                         </div>
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Confirm Password') }}
-                                </button>
+                        <form method="POST" action="{{ route('password.confirm') }}" class="needs-validation" novalidate>
+                            @csrf
 
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
+                            <div class="row g-3">
+                                <!-- Password field -->
+                                <div class="col-12">
+                                    <div class="password-field position-relative">
+                                        <label for="password"
+                                            class="form-label visually-hidden">{{ __('Password') }}</label>
+                                        <div class="password-field position-relative">
+                                            <input id="password" type="password"
+                                                class="form-control fakePassword @error('password') is-invalid @enderror"
+                                                name="password" placeholder="Password" required
+                                                autocomplete="current-password" autofocus />
+                                            <span><i class="bi bi-eye-slash passwordToggler"></i></span>
+
+                                            @error('password')
+                                                <div class="invalid-feedback">
+                                                    <strong>{{ $message }}</strong>
+                                                </div>
+                                            @else
+                                                <div class="invalid-feedback">Please enter your password.</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit button -->
+                                <div class="col-12 d-grid">
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Confirm Password') }}
+                                    </button>
+                                </div>
+
+                                <!-- Forgot password link -->
+                                <div class="text-center">
+                                    @if (Route::has('password.request'))
+                                        Forgot your password?
+                                        <a href="{{ route('password.request') }}">Reset It</a>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        </section>
+    </main>
 @endsection
+
+@push('scripts')
+    <!-- Password toggle and validation scripts -->
+    <script src="{{ asset('assets/js/vendors/password.js') }}"></script>
+    <script src="{{ asset('assets/js/vendors/validation.js') }}"></script>
+@endpush

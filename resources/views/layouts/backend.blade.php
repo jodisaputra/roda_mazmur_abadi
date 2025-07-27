@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="Codescandy" name="author" />
-    <title>@yield('title', 'Homepage v1 - eCommerce HTML Template - FreshCart')</title>
+    <title>@yield('title', config('app.name'))</title>
 
     <!-- CSS Files -->
     <link href="{{ asset('assets/libs/slick-carousel/slick/slick.css') }}" rel="stylesheet" />
@@ -53,35 +53,20 @@
 </head>
 
 <body>
-    <!-- Navbar -->
-    @include('layouts.partials.navbar')
+    @include('layouts.partials.backend.topbar')
 
-    <!-- Main Content -->
-    <main>
-        @yield('content')
-    </main>
+    <div class="main-wrapper">
+        @include('layouts.partials.backend.sidebar')
+        @include('layouts.partials.backend.mobile-sidebar')
 
-    <!-- Modals -->
-    @include('layouts.partials.modals')
+        <main class="main-content-wrapper">
+            <section class="container">
+                @yield('content')
+            </section>
+        </main>
+    </div>
 
-    <!-- Footer -->
-    @include('layouts.partials.footer')
-
-    <!-- Javascript -->
-    <script src="{{ asset('assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('assets/libs/simplebar/dist/simplebar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/theme.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/jquery.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/countdown.js') }}"></script>
-    <script src="{{ asset('assets/libs/slick-carousel/slick/slick.min.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/slick-slider.js') }}"></script>
-    <script src="{{ asset('assets/libs/tiny-slider/dist/min/tiny-slider.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/tns-slider.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/zoom.js') }}"></script>
-    <script src="{{ asset('assets/js/vendors/validation.js') }}"></script>
-
-    <!-- Additional JavaScript from pages -->
-    @stack('scripts')
+    @include('layouts.partials.backend.scripts')
 </body>
 
 </html>
