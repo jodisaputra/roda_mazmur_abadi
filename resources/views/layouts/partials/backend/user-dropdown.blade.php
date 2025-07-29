@@ -1,6 +1,6 @@
 <li class="dropdown ms-4">
     <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <img src="../assets/images/avatar/avatar-1.jpg" alt="" class="avatar avatar-md rounded-circle" />
+        <img src="{{ asset('assets/images/avatar/avatar-1.jpg') }}" alt="" class="avatar avatar-md rounded-circle" />
     </a>
 
     <div class="dropdown-menu dropdown-menu-end p-0">

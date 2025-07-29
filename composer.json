@@ -7,10 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "cviebrock/eloquent-sluggable": "^12.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "laravel/ui": "^4.6",
-        "spatie/laravel-permission": "^6.21"
+        "realrashid/sweet-alert": "^7.3",
+        "spatie/laravel-permission": "^6.21",
+        "yajra/laravel-datatables-html": "^12.0",
+        "yajra/laravel-datatables-oracle": "^12.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -26,7 +30,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/SweetAlert.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

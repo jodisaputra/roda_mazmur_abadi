@@ -80,8 +80,14 @@
     <script src="{{ asset('assets/js/vendors/zoom.js') }}"></script>
     <script src="{{ asset('assets/js/vendors/validation.js') }}"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Additional JavaScript from pages -->
     @stack('scripts')
+
+    <!-- SweetAlert Laravel Integration -->
+    @include('sweetalert::alert')
 </body>
 
 </html>
