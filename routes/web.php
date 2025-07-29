@@ -3,12 +3,16 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FRONTEND\HomeController;
+use App\Http\Controllers\FRONTEND\ProductController as FrontendProductController;
 use App\Http\Controllers\BACKEND\CategoryController;
 use App\Http\Controllers\BACKEND\ProductController;
 use App\Http\Controllers\BACKEND\DashboardController;
 use App\Http\Controllers\BACKEND\ShelfController;
 
 Route::get('/', HomeController::class)->name('home');
+
+// Frontend Routes
+Route::get('product/{product}/quick-view', [FrontendProductController::class, 'quickView'])->name('product.quick-view');
 
 Auth::routes();
 
