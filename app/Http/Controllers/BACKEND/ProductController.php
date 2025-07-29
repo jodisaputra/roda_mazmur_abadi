@@ -42,8 +42,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = $this->productService->getActiveCategories();
+        $shelves = \App\Models\Shelf::active()->with('products')->get();
 
-        return view('BACKEND.product.create', compact('categories'));
+        return view('BACKEND.product.create', compact('categories', 'shelves'));
     }
 
     /**
@@ -78,9 +79,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = $this->productService->getActiveCategories();
-        $product->load(['category', 'images']);
+        $shelves = \App\Models\Shelf::active()->with('products')->get();
+        $product->load(['category', 'images', 'shelves']);
 
-        return view('BACKEND.product.edit', compact('product', 'categories'));
+        return view('BACKEND.product.edit', compact('product', 'categories', 'shelves'));
     }
 
     /**

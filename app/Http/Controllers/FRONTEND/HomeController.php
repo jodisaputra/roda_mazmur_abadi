@@ -13,7 +13,6 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $heroSliders = HeroSlider::active()->ordered()->get();
-        return view('welcome');
+        return view('index');
     }
 }

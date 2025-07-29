@@ -51,6 +51,18 @@
                                 </p>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Shelves</label>
+                                <p class="mb-0">
+                                    @if($product->shelves->count() > 0)
+                                        @foreach($product->shelves as $shelf)
+                                            <span class="badge bg-info me-1">{{ $shelf->name }}</span>
+                                        @endforeach
+                                    @else
+                                        <span class="text-muted">No shelves assigned</span>
+                                    @endif
+                                </p>
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">SKU</label>
                                 <p class="mb-0">{{ $product->sku ?: 'Not set' }}</p>
                             </div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Cviebrock\EloquentSluggable\Sluggable;
 
@@ -66,6 +67,17 @@ class Product extends Model
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /**
+     * Get the shelves for the product.
+     */
+    public function shelves(): BelongsToMany
+    {
+        return $this->belongsToMany(Shelf::class, 'product_shelf')
+                    ->withPivot('sort_order')
+                    ->withTimestamps()
+                    ->orderBy('product_shelf.sort_order');
     }
 
     /**

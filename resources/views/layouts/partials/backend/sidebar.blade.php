@@ -36,6 +36,15 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.shelves.*') ? 'active' : '' }}" href="{{ route('admin.shelves.index') }}">
+                        <div class="d-flex align-items-center">
+                            <span class="nav-link-icon"><i class="bi bi-grid-3x3-gap"></i></span>
+                            <span class="nav-link-text">Shelves</span>
+                        </div>
+                    </a>
+                </li>
+
 
             </ul>
         </div>

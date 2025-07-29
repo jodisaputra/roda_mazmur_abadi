@@ -6,25 +6,14 @@ use App\Http\Controllers\FRONTEND\HomeController;
 use App\Http\Controllers\BACKEND\CategoryController;
 use App\Http\Controllers\BACKEND\ProductController;
 use App\Http\Controllers\BACKEND\DashboardController;
+use App\Http\Controllers\BACKEND\ShelfController;
 
 Route::get('/', HomeController::class)->name('home');
-
-// Test SweetAlert Frontend
-Route::get('/test-frontend-alert', function () {
-    sweet_alert_success('Frontend Success!', 'SweetAlert is working on frontend!');
-    return redirect()->route('home');
-})->name('test.frontend.alert');
 
 Auth::routes();
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/', DashboardController::class)->name('dashboard');
-
-    // Test SweetAlert
-    Route::get('/test-alert', function () {
-        sweet_alert_success('Test Success!', 'SweetAlert is working perfectly!');
-        return redirect()->route('admin.categories.index');
-    })->name('test.alert');
 
     // Categories
     Route::resource('categories', CategoryController::class);
@@ -38,4 +27,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('products/generate-slug', [ProductController::class, 'generateSlug'])->name('products.generate-slug');
     Route::post('products/generate-sku', [ProductController::class, 'generateSku'])->name('products.generate-sku');
     Route::post('products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
+
+    // Shelves
+    Route::resource('shelves', ShelfController::class);
+    Route::get('shelves/{shelf}/manage-products', [ShelfController::class, 'manageProducts'])->name('shelves.manage-products');
+    Route::post('shelves/{shelf}/update-products', [ShelfController::class, 'updateProducts'])->name('shelves.update-products');
 });

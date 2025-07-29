@@ -35,7 +35,8 @@ class ProductService
         // Handle images if provided
         $images = $data['images'] ?? [];
         $primaryIndex = (int) ($data['primary_image_index'] ?? 0);
-        unset($data['images'], $data['primary_image_index']);
+        $shelves = $data['shelves'] ?? [];
+        unset($data['images'], $data['primary_image_index'], $data['shelves']);
 
         // Create the product
         $product = Product::create($data);
@@ -45,7 +46,12 @@ class ProductService
             $this->handleImageUploads($product, $images, $primaryIndex);
         }
 
-        return $product->load(['category', 'images']);
+        // Handle shelves
+        if (!empty($shelves)) {
+            $product->shelves()->sync($shelves);
+        }
+
+        return $product->load(['category', 'images', 'shelves']);
     }
 
     /**
@@ -57,7 +63,8 @@ class ProductService
         $images = $data['images'] ?? [];
         $keepImages = $data['keep_images'] ?? [];
         $primaryIndex = (int) ($data['primary_image_index'] ?? 0);
-        unset($data['images'], $data['keep_images'], $data['primary_image_index']);
+        $shelves = $data['shelves'] ?? [];
+        unset($data['images'], $data['keep_images'], $data['primary_image_index'], $data['shelves']);
 
         // Update the product
         $product->update($data);
@@ -65,7 +72,10 @@ class ProductService
         // Handle image management
         $this->manageProductImages($product, $images, $keepImages, $primaryIndex);
 
-        return $product->fresh(['category', 'images']);
+        // Handle shelves
+        $product->shelves()->sync($shelves);
+
+        return $product->fresh(['category', 'images', 'shelves']);
     }
 
     /**

@@ -160,6 +160,70 @@
                 </div>
             </div>
         </div>
+
+        <!-- Product Shelves -->
+        <div class="card mb-6 card-lg">
+            <div class="card-body p-6">
+                <h4 class="mb-4 h5">Product Shelves</h4>
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Note:</strong> Each product can only be assigned to one shelf. Selecting a shelf will automatically deselect others.
+                </div>
+
+                @if(isset($shelves) && $shelves->count() > 0)
+                    @foreach($shelves as $shelf)
+                        <div class="form-check mb-3 p-3 border rounded {{ isset($product) && $product->shelves->contains($shelf->id) ? 'border-primary bg-light' : '' }}">
+                            <input class="form-check-input shelf-checkbox" type="checkbox"
+                                   name="shelves[]" value="{{ $shelf->id }}"
+                                   id="shelf_{{ $shelf->id }}"
+                                   @if(isset($product) && $product->shelves->contains($shelf->id))
+                                       checked
+                                   @elseif(old('shelves') && in_array($shelf->id, old('shelves', [])))
+                                       checked
+                                   @endif>
+                            <label class="form-check-label w-100" for="shelf_{{ $shelf->id }}">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ $shelf->name }}</strong>
+                                        @if($shelf->capacity)
+                                            <span class="badge bg-info ms-2">
+                                                {{ $shelf->products->count() }}/{{ $shelf->capacity }} products
+                                                @if($shelf->products->count() >= $shelf->capacity && !isset($product))
+                                                    <i class="bi bi-exclamation-triangle ms-1"></i>
+                                                @endif
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary ms-2">Unlimited</span>
+                                        @endif
+
+                                        @if(!$shelf->is_active)
+                                            <span class="badge bg-warning ms-2">Inactive</span>
+                                        @endif
+                                    </div>
+
+                                    @if($shelf->capacity && $shelf->products->count() >= $shelf->capacity && !isset($product))
+                                        <small class="text-warning">
+                                            <i class="bi bi-exclamation-triangle"></i> Shelf is full
+                                        </small>
+                                    @endif
+                                </div>
+
+                                @if($shelf->capacity && $shelf->products->count() >= $shelf->capacity && !isset($product))
+                                    <small class="text-muted d-block mt-1">
+                                        This shelf has reached its maximum capacity.
+                                    </small>
+                                @endif
+                            </label>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> No shelves available.
+                        <a href="{{ route('admin.shelves.create') }}" target="_blank">Create shelves first</a>.
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-4 col-12">
@@ -474,5 +538,71 @@ function setPrimaryImage(imageId) {
     });
 }
 @endif
+
+// Handle shelf selection - only one shelf can be selected
+$(document).ready(function() {
+    // Function to update shelf checkboxes state
+    function updateShelfCheckboxes() {
+        const checkedShelf = $('input[name="shelves[]"]:checked');
+        const allShelves = $('input[name="shelves[]"]');
+        
+        if (checkedShelf.length > 0) {
+            // Disable all other shelves
+            allShelves.not(checkedShelf).each(function() {
+                $(this).prop('disabled', true);
+                $(this).closest('.form-check').addClass('opacity-50');
+            });
+            
+            // Keep the selected shelf enabled
+            checkedShelf.prop('disabled', false);
+            checkedShelf.closest('.form-check').removeClass('opacity-50').addClass('border-success bg-light');
+        } else {
+            // Enable all shelves if none selected
+            allShelves.prop('disabled', false);
+            $('.form-check').removeClass('opacity-50 border-success bg-light');
+        }
+    }
+
+    // Check for full shelves and disable them (except if product is already in that shelf)
+    @if(!isset($product))
+    $('input[name="shelves[]"]').each(function() {
+        const shelfContainer = $(this).closest('.form-check');
+        const fullShelfIndicator = shelfContainer.find('.text-warning');
+        
+        if (fullShelfIndicator.length > 0) {
+            $(this).prop('disabled', true);
+            shelfContainer.addClass('opacity-50');
+            shelfContainer.append('<small class="text-warning d-block"><i class="bi bi-lock"></i> Cannot add to full shelf</small>');
+        }
+    });
+    @endif
+
+    // Handle checkbox change
+    $('input[name="shelves[]"]').on('change', function() {
+        if (this.checked) {
+            // Uncheck all other shelf checkboxes
+            $('input[name="shelves[]"]').not(this).prop('checked', false);
+            
+            // Show success message
+            const shelfName = $(this).next('label').find('strong').text();
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Shelf Selected!',
+                    text: `Product will be added to "${shelfName}" shelf.`,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+        }
+        
+        updateShelfCheckboxes();
+    });
+
+    // Initial state update
+    updateShelfCheckboxes();
+});
 </script>
 @endpush
