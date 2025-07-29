@@ -1,0 +1,668 @@
+<div class="row">
+    <div class="col-lg-8 col-12">
+        <!-- card -->
+        <div class="card mb-6 card-lg">
+            <!-- card body -->
+            <div class="card-body p-6">
+                <h4 class="mb-4 h5">Product Information</h4>
+                <div class="row">
+                    <!-- Product Name -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control @error('name') is-invalid @enderror"
+                               name="name" id="productName"
+                               placeholder="Enter product name"
+                               value="{{ old('name', $product->name ?? '') }}" required />
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Product Category -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">Product Category</label>
+                        <select class="form-select @error('category_id') is-invalid @enderror" name="category_id">
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}"
+                                        {{ old('category_id', $product->category_id ?? '') == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('category_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- SKU -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">SKU</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control @error('sku') is-invalid @enderror"
+                                   name="sku" id="productSku"
+                                   placeholder="Product SKU"
+                                   value="{{ old('sku', $product->sku ?? '') }}" />
+                            <button class="btn btn-outline-secondary" type="button" id="generateSkuBtn">Generate</button>
+                        </div>
+                        @error('sku')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Product Code -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">Product Code</label>
+                        <input type="text" class="form-control @error('product_code') is-invalid @enderror"
+                               name="product_code"
+                               placeholder="Product Code"
+                               value="{{ old('product_code', $product->product_code ?? '') }}" />
+                        @error('product_code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">Price (Rp) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control @error('price') is-invalid @enderror"
+                               name="price" step="0.01" min="0"
+                               placeholder="0.00"
+                               value="{{ old('price', $product->price ?? '') }}" required />
+                        @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Stock Quantity -->
+                    <div class="mb-3 col-lg-6">
+                        <label class="form-label">Stock Quantity <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control @error('stock_quantity') is-invalid @enderror"
+                               name="stock_quantity" min="0"
+                               placeholder="0"
+                               value="{{ old('stock_quantity', $product->stock_quantity ?? '0') }}" required />
+                        @error('stock_quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <!-- Slug (Hidden, will be auto-generated) -->
+                    <input type="hidden" name="slug" id="productSlug" value="{{ old('slug', $product->slug ?? '') }}">
+
+                    <!-- Product Description -->
+                    <div class="mb-3 col-lg-12 mt-5">
+                        <h4 class="mb-3 h5">Product Description</h4>
+                        <textarea class="form-control @error('description') is-invalid @enderror"
+                                  name="description" rows="8"
+                                  placeholder="Enter product description">{{ old('description', $product->description ?? '') }}</textarea>
+                        @error('description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Images -->
+        <div class="card mb-6 card-lg">
+            <div class="card-body p-6">
+                <h4 class="mb-4 h5">Product Images</h4>
+
+                @if(isset($product) && $product->images->count() > 0)
+                    <div class="mb-4">
+                        <label class="form-label">Current Images</label>
+                        <div class="row">
+                            @foreach($product->images as $image)
+                                <div class="col-md-3 mb-3">
+                                    <div class="card">
+                                        <img src="{{ $image->image_url }}" class="card-img-top"
+                                             style="height: 150px; object-fit: cover;" alt="{{ $image->alt_text }}">
+                                        <div class="card-body p-2">
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                       name="keep_images[]" value="{{ $image->id }}" checked>
+                                                <label class="form-check-label small">Keep Image</label>
+                                            </div>
+                                            @if($image->is_primary)
+                                                <span class="badge bg-success">Primary</span>
+                                            @else
+                                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                                        onclick="setPrimaryImage({{ $image->id }})">
+                                                    Set Primary
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Dropzone for new images -->
+                <div class="mb-3">
+                    <label class="form-label">Upload New Images</label>
+                    <div class="dropzone" id="productImagesDropzone">
+                        <div class="dz-message">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
+                                <h5 class="mb-1">Drop files here or click to upload</h5>
+                                <p class="text-muted mb-0">Upload maximum 5 images (JPEG, PNG, JPG, GIF, SVG, WebP)</p>
+                                <p class="text-muted small">Maximum file size: 2MB each</p>
+                            </div>
+                        </div>
+                    </div>
+                    @error('images')
+                        <div class="text-danger small mt-2">{{ $message }}</div>
+                    @enderror
+                    @error('images.*')
+                        <div class="text-danger small mt-2">{{ $message }}</div>
+                    @enderror
+
+                    <!-- Hidden input to store file data for form submission -->
+                    <div id="hiddenImageInputs"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-12">
+        <!-- Product Status -->
+        <div class="card mb-6 card-lg">
+            <div class="card-body p-6">
+                <h4 class="mb-4 h5">Product Status</h4>
+
+                <!-- In Stock Toggle -->
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" role="switch"
+                           id="flexSwitchStock" name="in_stock" value="1"
+                           {{ old('in_stock', $product->in_stock ?? true) ? 'checked' : '' }} />
+                    <label class="form-check-label" for="flexSwitchStock">In Stock</label>
+                </div>
+
+                <!-- Status -->
+                <div class="mb-3">
+                    <label class="form-label">Publication Status <span class="text-danger">*</span></label>
+                    <select class="form-select @error('status') is-invalid @enderror" name="status" required>
+                        <option value="draft" {{ old('status', $product->status ?? 'draft') === 'draft' ? 'selected' : '' }}>
+                            Draft
+                        </option>
+                        <option value="active" {{ old('status', $product->status ?? '') === 'active' ? 'selected' : '' }}>
+                            Active
+                        </option>
+                        <option value="inactive" {{ old('status', $product->status ?? '') === 'inactive' ? 'selected' : '' }}>
+                            Inactive
+                        </option>
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">
+                {{ isset($product) ? 'Update Product' : 'Create Product' }}
+            </button>
+            <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<link href="https://unpkg.com/dropzone@6/dist/dropzone.css" rel="stylesheet" type="text/css" />
+<style>
+    .dropzone {
+        border: 2px dashed #dee2e6;
+        border-radius: 0.375rem;
+        background: #f8f9fa;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        min-height: 200px;
+        cursor: pointer;
+    }
+    .dropzone:hover {
+        border-color: #0d6efd;
+        background: #f0f8ff;
+    }
+    .dropzone.dz-drag-hover {
+        border-color: #0d6efd;
+        background: #e7f3ff;
+        transform: scale(1.02);
+    }
+    .dropzone .dz-preview {
+        display: inline-block;
+        margin: 0.5rem;
+        vertical-align: top;
+    }
+    .dropzone .dz-preview .dz-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        position: relative;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+    }
+    .dropzone .dz-preview .dz-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .dropzone .dz-preview .dz-details {
+        padding: 0.5rem 0;
+        text-align: center;
+    }
+    .dropzone .dz-preview .dz-filename {
+        font-size: 0.75rem;
+        color: #6c757d;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 120px;
+    }
+    .dropzone .dz-preview .dz-size {
+        font-size: 0.7rem;
+        color: #adb5bd;
+    }
+    .dropzone .dz-preview .dz-remove {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(220, 53, 69, 0.8);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.8rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .dropzone .dz-preview:hover .dz-remove {
+        opacity: 1;
+    }
+    .dropzone .dz-preview.dz-success .dz-success-mark {
+        opacity: 1;
+    }
+    .dropzone .dz-preview .dz-success-mark {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        color: #198754;
+        font-size: 1.2rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .dropzone .dz-message {
+        margin: 0;
+        color: #6c757d;
+    }
+    .dropzone.dz-started .dz-message {
+        display: none;
+    }
+    /* Custom preview layout */
+    .dropzone .dz-preview {
+        position: relative;
+    }
+    .dropzone .dz-preview .dz-image {
+        position: relative;
+    }
+    .dropzone .dz-preview .dz-progress {
+        display: none;
+    }
+    .dropzone .dz-preview .dz-error-message {
+        display: none;
+    }
+    .dropzone .dz-preview .dz-error-mark {
+        display: none;
+    }
+
+    /* Primary image indicator */
+    .dropzone .dz-preview .primary-badge {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: #198754;
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 0.25rem;
+        z-index: 10;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .dropzone .dz-preview.is-primary .primary-badge {
+        opacity: 1;
+    }
+
+    .dropzone .dz-preview .set-primary-btn {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        right: 5px;
+        background: rgba(13, 110, 253, 0.9);
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        padding: 4px 8px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .dropzone .dz-preview:hover .set-primary-btn {
+        opacity: 1;
+    }
+
+    .dropzone .dz-preview.is-primary .set-primary-btn {
+        display: none;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+console.log('Form script loaded');
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded');
+
+    // Check required elements
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    const productNameInput = document.getElementById('productName');
+    const productSkuInput = document.getElementById('productSku');
+    const generateSkuBtn = document.getElementById('generateSkuBtn');
+    const dropzoneElement = document.getElementById('productImagesDropzone');
+
+    console.log('CSRF token:', csrfToken ? csrfToken.getAttribute('content') : 'NOT FOUND');
+    console.log('Product name input:', productNameInput ? 'FOUND' : 'NOT FOUND');
+    console.log('Product SKU input:', productSkuInput ? 'FOUND' : 'NOT FOUND');
+    console.log('Generate SKU button:', generateSkuBtn ? 'FOUND' : 'NOT FOUND');
+    console.log('Dropzone element:', dropzoneElement ? 'FOUND' : 'NOT FOUND');
+
+    // Generate slug from product name
+    if (productNameInput) {
+        productNameInput.addEventListener('input', function() {
+            console.log('Product name changed:', this.value);
+            let name = this.value;
+            if (name) {
+                fetch('/admin/products/generate-slug', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        @if(isset($product))
+                        product_id: {{ $product->id }}
+                        @endif
+                    })
+                })
+                .then(response => {
+                    console.log('Generate slug response:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Slug generated:', data.slug);
+                    document.getElementById('productSlug').value = data.slug;
+                })
+                .catch(error => {
+                    console.error('Generate slug error:', error);
+                });
+            }
+        });
+    }
+
+    // Generate SKU - Simple and direct approach
+    if (generateSkuBtn) {
+        generateSkuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Generate SKU button clicked');
+
+            // Disable button during request
+            this.disabled = true;
+            this.textContent = 'Loading...';
+
+            fetch('/admin/products/generate-sku', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Generate SKU response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('SKU generated:', data.sku);
+                if (productSkuInput) {
+                    productSkuInput.value = data.sku;
+                }
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'SKU Generated!',
+                        text: 'New SKU: ' + data.sku,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    alert('SKU Generated: ' + data.sku);
+                }
+            })
+            .catch(error => {
+                console.error('Generate SKU error:', error);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Error generating SKU: ' + error.message
+                    });
+                } else {
+                    alert('Error generating SKU: ' + error.message);
+                }
+            })
+            .finally(() => {
+                // Re-enable button
+                this.disabled = false;
+                this.textContent = 'Generate';
+            });
+        });
+    }
+
+    // Simple Dropzone initialization - load after everything else
+    setTimeout(function() {
+        initializeDropzone();
+    }, 1000);
+});
+
+// Separate function for Dropzone initialization
+function initializeDropzone() {
+    console.log('Attempting to initialize Dropzone...');
+    
+    const dropzoneElement = document.getElementById('productImagesDropzone');
+    if (!dropzoneElement) {
+        console.error('Dropzone element not found');
+        return;
+    }
+
+    // Check if Dropzone is available
+    if (typeof Dropzone === 'undefined') {
+        console.error('Dropzone library not loaded');
+        
+        // Try to load it
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/dropzone@6/dist/dropzone-min.js';
+        script.onload = function() {
+            console.log('Dropzone loaded dynamically');
+            setTimeout(function() {
+                setupDropzone();
+            }, 500);
+        };
+        script.onerror = function() {
+            console.error('Failed to load Dropzone');
+            showDropzoneError();
+        };
+        document.head.appendChild(script);
+        return;
+    }
+
+    setupDropzone();
+}
+
+function setupDropzone() {
+    console.log('Setting up Dropzone...');
+    
+    // Disable auto discover
+    if (typeof Dropzone !== 'undefined') {
+        Dropzone.autoDiscover = false;
+    }
+
+    const dropzoneElement = document.getElementById('productImagesDropzone');
+    if (!dropzoneElement) {
+        console.error('Dropzone element not found during setup');
+        return;
+    }
+
+    try {
+        let uploadedFiles = [];
+        let primaryImageIndex = 0;
+        const maxFiles = 5;
+
+        const dropzone = new Dropzone("#productImagesDropzone", {
+            url: "#", // Dummy URL
+            autoProcessQueue: false,
+            uploadMultiple: false,
+            parallelUploads: 1,
+            maxFiles: maxFiles,
+            maxFilesize: 2,
+            acceptedFiles: "image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp",
+            addRemoveLinks: true,
+            dictRemoveFile: "Remove",
+            dictDefaultMessage: `
+                <div class="d-flex flex-column align-items-center">
+                    <i class="bi bi-cloud-upload fs-1 text-muted mb-2"></i>
+                    <h5 class="mb-1">Drop files here or click to upload</h5>
+                    <p class="text-muted mb-0">Upload maximum ${maxFiles} images</p>
+                    <p class="text-muted small">Maximum file size: 2MB each</p>
+                </div>
+            `,
+            init: function() {
+                console.log('Dropzone initialized successfully');
+
+                this.on("addedfile", function(file) {
+                    console.log('File added to dropzone:', file.name);
+                    uploadedFiles.push(file);
+                    
+                    if (uploadedFiles.length === 1) {
+                        primaryImageIndex = 0;
+                        file.previewElement.classList.add('is-primary');
+                    }
+                    
+                    updateHiddenInputs();
+                });
+
+                this.on("removedfile", function(file) {
+                    console.log('File removed from dropzone:', file.name);
+                    const index = uploadedFiles.indexOf(file);
+                    if (index > -1) {
+                        uploadedFiles.splice(index, 1);
+                        if (uploadedFiles.length === 0) {
+                            primaryImageIndex = 0;
+                        }
+                    }
+                    updateHiddenInputs();
+                });
+
+                this.on("addedfile", function(file) {
+                    file.previewElement.classList.add("dz-success");
+                });
+            }
+        });
+
+        // Function to update hidden inputs
+        function updateHiddenInputs() {
+            const hiddenContainer = document.getElementById('hiddenImageInputs');
+            if (!hiddenContainer) return;
+
+            hiddenContainer.innerHTML = '';
+
+            if (uploadedFiles.length > 0) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.name = 'images[]';
+                input.multiple = true;
+                input.style.display = 'none';
+
+                const dt = new DataTransfer();
+                uploadedFiles.forEach(file => {
+                    dt.items.add(file);
+                });
+                input.files = dt.files;
+
+                hiddenContainer.appendChild(input);
+
+                const primaryInput = document.createElement('input');
+                primaryInput.type = 'hidden';
+                primaryInput.name = 'primary_image_index';
+                primaryInput.value = primaryImageIndex;
+                hiddenContainer.appendChild(primaryInput);
+            }
+        }
+
+        console.log('Dropzone setup completed successfully');
+
+    } catch (error) {
+        console.error('Error setting up Dropzone:', error);
+        showDropzoneError();
+    }
+@if(isset($product))
+function setPrimaryImage(imageId) {
+    console.log('Setting primary image:', imageId);
+
+    fetch(`/admin/products/{{ $product->id }}/set-primary-image`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            image_id: imageId
+        })
+    })
+    .then(response => {
+        console.log('Set primary image response:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('Set primary image result:', data);
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Failed to set primary image: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Set primary image error:', error);
+        alert('Error setting primary image: ' + error.message);
+    });
+}
+@endif
+</script>
+@endpush

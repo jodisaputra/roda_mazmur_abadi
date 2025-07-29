@@ -1,0 +1,8 @@
+<!-- Default Product Image SVG -->
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="300" fill="#f8f9fa"/>
+  <path d="M75 225V75H225V225H75Z" stroke="#dee2e6" stroke-width="2" fill="none"/>
+  <circle cx="112.5" cy="112.5" r="12.5" fill="#adb5bd"/>
+  <path d="M75 195L105 165L135 195L180 150L225 195V225H75V195Z" fill="#ced4da"/>
+  <text x="150" y="255" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="14">No Image</text>
+</svg>

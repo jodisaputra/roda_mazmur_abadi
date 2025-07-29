@@ -44,7 +44,7 @@ class CategoryDataTableService
                 return '<span class="badge ' . $badgeClass . '">' . $statusText . '</span>';
             })
             ->addColumn('products_count', function ($category) {
-                return '0'; // Placeholder - update when you have products
+                return $category->products()->count();
             })
             ->addColumn('actions', function ($category) {
                 return '

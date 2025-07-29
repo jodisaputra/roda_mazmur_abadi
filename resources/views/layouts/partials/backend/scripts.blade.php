@@ -27,5 +27,40 @@
 <!-- Additional JavaScript from pages -->
 @stack('scripts')
 
-<!-- SweetAlert Laravel Integration -->
-@include('sweetalert::alert')
+<!-- SweetAlert Laravel Integration - Modified to prevent repeated alerts -->
+@if(session()->has('sweet_alert'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('sweet_alert.type') === 'success')
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: '{{ session('sweet_alert.message') }}',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            @elseif(session('sweet_alert.type') === 'error')
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: '{{ session('sweet_alert.message') }}',
+                    showConfirmButton: true
+                });
+            @elseif(session('sweet_alert.type') === 'warning')
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning!',
+                    text: '{{ session('sweet_alert.message') }}',
+                    showConfirmButton: true
+                });
+            @elseif(session('sweet_alert.type') === 'info')
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Info!',
+                    text: '{{ session('sweet_alert.message') }}',
+                    showConfirmButton: true
+                });
+            @endif
+        });
+    </script>
+@endif

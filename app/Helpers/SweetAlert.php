@@ -6,7 +6,11 @@ if (!function_exists('sweet_alert_success')) {
      */
     function sweet_alert_success($title = 'Success!', $message = '')
     {
-        alert()->success($title, $message);
+        session()->flash('sweet_alert', [
+            'type' => 'success',
+            'title' => $title,
+            'message' => $message
+        ]);
     }
 }
 
@@ -16,7 +20,11 @@ if (!function_exists('sweet_alert_error')) {
      */
     function sweet_alert_error($title = 'Error!', $message = '')
     {
-        alert()->error($title, $message);
+        session()->flash('sweet_alert', [
+            'type' => 'error',
+            'title' => $title,
+            'message' => $message
+        ]);
     }
 }
 
@@ -26,7 +34,11 @@ if (!function_exists('sweet_alert_warning')) {
      */
     function sweet_alert_warning($title = 'Warning!', $message = '')
     {
-        alert()->warning($title, $message);
+        session()->flash('sweet_alert', [
+            'type' => 'warning',
+            'title' => $title,
+            'message' => $message
+        ]);
     }
 }
 
@@ -36,6 +48,10 @@ if (!function_exists('sweet_alert_info')) {
      */
     function sweet_alert_info($title = 'Info!', $message = '')
     {
-        alert()->info($title, $message);
+        session()->flash('sweet_alert', [
+            'type' => 'info',
+            'title' => $title,
+            'message' => $message
+        ]);
     }
 }

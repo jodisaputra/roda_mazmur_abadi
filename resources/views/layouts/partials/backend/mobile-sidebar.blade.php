@@ -20,7 +20,15 @@
                     <span class="nav-label">Module Managements</span>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="../dashboard/products.html">
+                    <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">
+                        <div class="d-flex align-items-center">
+                            <span class="nav-link-icon"><i class="bi bi-card-checklist"></i></span>
+                            <span class="nav-link-text">Categories</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
                         <div class="d-flex align-items-center">
                             <span class="nav-link-icon"><i class="bi bi-cart"></i></span>
                             <span class="nav-link-text">Products</span>
