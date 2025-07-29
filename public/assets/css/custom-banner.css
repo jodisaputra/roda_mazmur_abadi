@@ -1,0 +1,145 @@
+/* Bootstrap Carousel Custom Styles - Tokopedia Style */
+.hero-section {
+    margin-top: 10px;
+    margin-bottom: 40px; /* Increased spacing below slider */
+}
+
+#heroCarousel {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    max-width: 100%;
+    width: 100%;
+}
+
+#heroCarousel .carousel-inner {
+    border-radius: 12px;
+}
+
+#heroCarousel img {
+    border-radius: 12px;
+    height: 400px; /* Increased from 300px to 400px */
+    object-fit: cover;
+    width: 100%;
+}
+
+/* Custom arrow styles */
+#heroCarousel .carousel-control-prev,
+#heroCarousel .carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 1 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+#heroCarousel .carousel-control-prev {
+    left: 20px;
+}
+
+#heroCarousel .carousel-control-next {
+    right: 20px;
+}
+
+#heroCarousel .carousel-control-prev:hover,
+#heroCarousel .carousel-control-next:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-50%) scale(1.05);
+}
+
+#heroCarousel .carousel-control-prev-icon,
+#heroCarousel .carousel-control-next-icon {
+    width: 24px;
+    height: 24px;
+    background-size: 24px 24px;
+    filter: invert(0.3); /* Dark gray arrows */
+}
+
+/* Custom indicators */
+#heroCarousel .carousel-indicators {
+    bottom: 15px;
+    margin: 0;
+}
+
+#heroCarousel .carousel-indicators [data-bs-target] {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border: none;
+}
+
+#heroCarousel .carousel-indicators .active {
+    background-color: #fff;
+    transform: scale(1.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        margin-bottom: 30px; /* Smaller spacing on tablet */
+    }
+
+    #heroCarousel img {
+        height: 250px !important; /* Increased from 200px */
+    }
+
+    #heroCarousel .carousel-control-prev,
+    #heroCarousel .carousel-control-next {
+        width: 45px;
+        height: 45px;
+    }
+
+    #heroCarousel .carousel-control-prev {
+        left: 15px;
+    }
+
+    #heroCarousel .carousel-control-next {
+        right: 15px;
+    }
+
+    #heroCarousel .carousel-control-prev-icon,
+    #heroCarousel .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+        background-size: 20px 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        margin-bottom: 25px; /* Even smaller spacing on mobile */
+    }
+
+    #heroCarousel img {
+        height: 180px !important; /* Increased from 160px */
+    }
+
+    #heroCarousel .carousel-control-prev,
+    #heroCarousel .carousel-control-next {
+        width: 40px;
+        height: 40px;
+    }
+
+    #heroCarousel .carousel-control-prev {
+        left: 10px;
+    }
+
+    #heroCarousel .carousel-control-next {
+        right: 10px;
+    }
+
+    #heroCarousel .carousel-control-prev-icon,
+    #heroCarousel .carousel-control-next-icon {
+        width: 18px;
+        height: 18px;
+        background-size: 18px 18px;
+    }
+}

@@ -7,7 +7,7 @@
     <div class="border-bottom shadow-sm">
         <nav class="navbar navbar-light py-2">
             <div class="container justify-content-center justify-content-lg-between">
-                <a class="navbar-brand" href="{{ route('home') }}">
+                <a class="navbar-brand" href="{{ route('homepage') }}">
                     <img src="{{ asset('assets/images/logo/freshcart-logo.svg') }}" alt="{{ config('app.name') }}"
                         class="d-inline-block align-text-top" />
                 </a>

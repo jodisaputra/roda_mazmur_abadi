@@ -39,4 +39,46 @@ class ProductController extends Controller
             ]
         ]);
     }
+
+    /**
+     * Display all products page
+     */
+    public function index()
+    {
+        $products = Product::with(['category', 'primaryImage'])
+            ->where('status', 'active')
+            ->latest()
+            ->paginate(20);
+
+        return view('frontend.products.index', compact('products'));
+    }
+
+    /**
+     * Display new products page
+     */
+    public function newProducts()
+    {
+        $products = Product::with(['category', 'primaryImage'])
+            ->where('status', 'active')
+            ->latest()
+            ->take(20)
+            ->get();
+
+        return view('frontend.products.new', compact('products'));
+    }
+
+    /**
+     * Display promotions page
+     */
+    public function promotions()
+    {
+        // For now, just show all products with a "promotion" view
+        $products = Product::with(['category', 'primaryImage'])
+            ->where('status', 'active')
+            ->latest()
+            ->take(20)
+            ->get();
+
+        return view('frontend.promotions', compact('products'));
+    }
 }

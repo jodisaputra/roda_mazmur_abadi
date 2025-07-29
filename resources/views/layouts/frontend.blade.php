@@ -24,6 +24,12 @@
     <!-- Theme CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/theme.min.css') }}" />
 
+    <!-- Custom Banner CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/custom-banner.css') }}" />
+
+    <!-- Responsive Navbar CSS -->
+    <link rel="stylesheet" href="{{ asset('assets/css/responsive-navbar.css') }}" />
+
     <!-- Additional CSS from pages -->
     @stack('styles')
 

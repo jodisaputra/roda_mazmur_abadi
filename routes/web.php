@@ -9,10 +9,15 @@ use App\Http\Controllers\BACKEND\ProductController;
 use App\Http\Controllers\BACKEND\DashboardController;
 use App\Http\Controllers\BACKEND\ShelfController;
 
-Route::get('/', HomeController::class)->name('home');
+Route::get('/', HomeController::class)->name('homepage');
 
 // Frontend Routes
 Route::get('product/{product}/quick-view', [FrontendProductController::class, 'quickView'])->name('product.quick-view');
+Route::get('/products', [FrontendProductController::class, 'index'])->name('products.index');
+Route::get('/products/new', [FrontendProductController::class, 'newProducts'])->name('products.new');
+Route::get('/promotions', [FrontendProductController::class, 'promotions'])->name('promotions');
+Route::get('/about', function() { return view('frontend.about'); })->name('about');
+Route::get('/contact', function() { return view('frontend.contact'); })->name('contact');
 
 Auth::routes();
 
