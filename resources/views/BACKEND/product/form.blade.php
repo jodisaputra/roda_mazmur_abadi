@@ -545,14 +545,14 @@ $(document).ready(function() {
     function updateShelfCheckboxes() {
         const checkedShelf = $('input[name="shelves[]"]:checked');
         const allShelves = $('input[name="shelves[]"]');
-        
+
         if (checkedShelf.length > 0) {
             // Disable all other shelves
             allShelves.not(checkedShelf).each(function() {
                 $(this).prop('disabled', true);
                 $(this).closest('.form-check').addClass('opacity-50');
             });
-            
+
             // Keep the selected shelf enabled
             checkedShelf.prop('disabled', false);
             checkedShelf.closest('.form-check').removeClass('opacity-50').addClass('border-success bg-light');
@@ -568,7 +568,7 @@ $(document).ready(function() {
     $('input[name="shelves[]"]').each(function() {
         const shelfContainer = $(this).closest('.form-check');
         const fullShelfIndicator = shelfContainer.find('.text-warning');
-        
+
         if (fullShelfIndicator.length > 0) {
             $(this).prop('disabled', true);
             shelfContainer.addClass('opacity-50');
@@ -582,7 +582,7 @@ $(document).ready(function() {
         if (this.checked) {
             // Uncheck all other shelf checkboxes
             $('input[name="shelves[]"]').not(this).prop('checked', false);
-            
+
             // Show success message
             const shelfName = $(this).next('label').find('strong').text();
             if (typeof Swal !== 'undefined') {
@@ -597,7 +597,7 @@ $(document).ready(function() {
                 });
             }
         }
-        
+
         updateShelfCheckboxes();
     });
 
