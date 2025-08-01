@@ -41,58 +41,6 @@
         </div>
     </section>
 
-    <!-- Feature Cards Section -->
-    <section class="py-4">
-        <div class="container">
-            <div class="row g-3">
-                <div class="col-md-3 col-6">
-                    <div class="card border-0 bg-light h-100">
-                        <div class="card-body text-center py-4">
-                            <div class="text-success mb-3">
-                                <i class="bi bi-truck" style="font-size: 2rem;"></i>
-                            </div>
-                            <h6 class="card-title mb-1">Gratis Ongkir</h6>
-                            <p class="card-text small text-muted mb-0">Min. pembelian Rp 100k</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="card border-0 bg-light h-100">
-                        <div class="card-body text-center py-4">
-                            <div class="text-success mb-3">
-                                <i class="bi bi-clock" style="font-size: 2rem;"></i>
-                            </div>
-                            <h6 class="card-title mb-1">Pengiriman Cepat</h6>
-                            <p class="card-text small text-muted mb-0">1-3 hari kerja</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="card border-0 bg-light h-100">
-                        <div class="card-body text-center py-4">
-                            <div class="text-success mb-3">
-                                <i class="bi bi-shield-check" style="font-size: 2rem;"></i>
-                            </div>
-                            <h6 class="card-title mb-1">Produk Berkualitas</h6>
-                            <p class="card-text small text-muted mb-0">Terjamin segar & halal</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6">
-                    <div class="card border-0 bg-light h-100">
-                        <div class="card-body text-center py-4">
-                            <div class="text-success mb-3">
-                                <i class="bi bi-headset" style="font-size: 2rem;"></i>
-                            </div>
-                            <h6 class="card-title mb-1">Customer Service</h6>
-                            <p class="card-text small text-muted mb-0">24/7 siap membantu</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Products Start-->
     @forelse($shelves as $shelf)
         @if($shelf->activeProducts->isNotEmpty())
@@ -173,155 +121,15 @@
         </section>
         @endif
     @empty
-        <section class="py-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <div class="py-5">
-                            <i class="bi bi-box-seam text-muted mb-3" style="font-size: 4rem;"></i>
-                            <h3 class="mb-3">Belum Ada Produk</h3>
-                            <p class="text-muted">Produk akan segera tersedia. Tetap pantau halaman ini!</p>
-                            <a href="#" class="btn btn-success">Hubungi Kami</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        @include('partials.empty-products', [
+            'title' => 'Produk Belum Tersedia',
+            'description' => 'Kami sedang mempersiapkan koleksi produk terbaik untuk Anda. Tetap pantau halaman ini untuk update produk terbaru!',
+            'contactUrl' => '#',
+            'subscribeUrl' => '#',
+            'newsletterAction' => null // Set to route when newsletter functionality is ready
+        ])
     @endforelse
     <!-- Products End-->
-
-    <!-- Promotional Banners Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card bg-success text-white border-0 h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <h4 class="card-title mb-2">Gratis Ongkir</h4>
-                                <p class="card-text mb-3">Untuk pembelian minimal Rp 100.000</p>
-                                <a href="#" class="btn btn-light btn-sm">Belanja Sekarang</a>
-                            </div>
-                            <div class="ms-3">
-                                <i class="bi bi-truck" style="font-size: 3rem; opacity: 0.3;"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-warning text-dark border-0 h-100">
-                        <div class="card-body d-flex align-items-center">
-                            <div class="flex-grow-1">
-                                <h4 class="card-title mb-2">Cashback 10%</h4>
-                                <p class="card-text mb-3">Untuk member baru, berlaku hari ini!</p>
-                                <a href="#" class="btn btn-dark btn-sm">Daftar Member</a>
-                            </div>
-                            <div class="ms-3">
-                                <i class="bi bi-gift" style="font-size: 3rem; opacity: 0.3;"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 text-center mb-5">
-                    <h2 class="fw-bold">Kata Pelanggan</h2>
-                    <p class="text-muted">Lihat apa kata mereka tentang layanan kami</p>
-                </div>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="card-text mb-4">"Produknya selalu segar dan berkualitas. Pengiriman juga cepat, sangat puas berbelanja di sini!"</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <img src="https://via.placeholder.com/50x50" alt="Customer" class="rounded-circle me-3" style="width: 50px; height: 50px;">
-                                <div class="text-start">
-                                    <h6 class="mb-0">Sari Dewi</h6>
-                                    <small class="text-muted">Jakarta</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="card-text mb-4">"Harga terjangkau dengan kualitas premium. Customer servicenya juga ramah dan responsif."</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <img src="https://via.placeholder.com/50x50" alt="Customer" class="rounded-circle me-3" style="width: 50px; height: 50px;">
-                                <div class="text-start">
-                                    <h6 class="mb-0">Ahmad Rizki</h6>
-                                    <small class="text-muted">Bandung</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="mb-3">
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                                <i class="bi bi-star-fill text-warning"></i>
-                            </div>
-                            <p class="card-text mb-4">"Aplikasinya mudah digunakan, dan ada banyak pilihan produk. Recommended banget!"</p>
-                            <div class="d-flex align-items-center justify-content-center">
-                                <img src="https://via.placeholder.com/50x50" alt="Customer" class="rounded-circle me-3" style="width: 50px; height: 50px;">
-                                <div class="text-start">
-                                    <h6 class="mb-0">Maya Putri</h6>
-                                    <small class="text-muted">Surabaya</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Newsletter Section -->
-    <section class="py-5 bg-primary text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <h3 class="fw-bold mb-2">Dapatkan Update Terbaru</h3>
-                    <p class="mb-lg-0">Berlangganan newsletter untuk mendapatkan info promo dan produk terbaru</p>
-                </div>
-                <div class="col-lg-6">
-                    <div class="d-flex gap-2">
-                        <input type="email" class="form-control" placeholder="Masukkan email Anda">
-                        <button class="btn btn-light" type="button">
-                            <i class="bi bi-send"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 @endsection
 
 {{-- Include Quick View Modal --}}

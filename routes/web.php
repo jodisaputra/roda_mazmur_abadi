@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FRONTEND\HomeController;
 use App\Http\Controllers\FRONTEND\ProductController as FrontendProductController;
+use App\Http\Controllers\FRONTEND\CategoryController as FrontendCategoryController;
 use App\Http\Controllers\BACKEND\CategoryController;
 use App\Http\Controllers\BACKEND\ProductController;
 use App\Http\Controllers\BACKEND\DashboardController;
@@ -15,9 +16,14 @@ Route::get('/', HomeController::class)->name('homepage');
 Route::get('product/{product}/quick-view', [FrontendProductController::class, 'quickView'])->name('product.quick-view');
 Route::get('/products', [FrontendProductController::class, 'index'])->name('products.index');
 Route::get('/products/new', [FrontendProductController::class, 'newProducts'])->name('products.new');
+Route::get('/product/{product:slug}', [FrontendProductController::class, 'show'])->name('products.show');
 Route::get('/promotions', [FrontendProductController::class, 'promotions'])->name('promotions');
 Route::get('/about', function() { return view('frontend.about'); })->name('about');
 Route::get('/contact', function() { return view('frontend.contact'); })->name('contact');
+
+// Category Routes
+Route::get('/categories', [FrontendCategoryController::class, 'index'])->name('categories.index');
+Route::get('/category/{category:slug}', [FrontendCategoryController::class, 'show'])->name('categories.show');
 
 Auth::routes();
 

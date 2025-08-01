@@ -1,0 +1,45 @@
+<svg width="400" height="280" viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Background Circle -->
+<circle cx="200" cy="140" r="120" fill="#F8F9FA" stroke="#E9ECEF" stroke-width="2"/>
+
+<!-- Empty Box -->
+<rect x="160" y="110" width="80" height="60" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="2" rx="4"/>
+<rect x="165" y="115" width="70" height="8" fill="#F3F4F6" rx="2"/>
+<rect x="165" y="130" width="50" height="6" fill="#F3F4F6" rx="2"/>
+<rect x="165" y="145" width="60" height="6" fill="#F3F4F6" rx="2"/>
+
+<!-- Dashed lines coming out of box -->
+<line x1="240" y1="125" x2="270" y2="110" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5,5"/>
+<line x1="240" y1="140" x2="270" y2="140" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5,5"/>
+<line x1="240" y1="155" x2="270" y2="170" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5,5"/>
+
+<!-- Search magnifying glass -->
+<circle cx="150" cy="100" r="12" fill="none" stroke="#9CA3AF" stroke-width="2"/>
+<line x1="159" y1="109" x2="175" y2="125" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+
+<!-- Stars for decoration -->
+<path d="M320 70 L322 76 L328 76 L323 80 L325 86 L320 82 L315 86 L317 80 L312 76 L318 76 Z" fill="#FCD34D"/>
+<path d="M100 190 L101.5 194 L106 194 L102.5 197 L104 201 L100 198 L96 201 L97.5 197 L94 194 L98.5 194 Z" fill="#F59E0B"/>
+<path d="M320 190 L321 193 L324 193 L321.5 195 L322.5 198 L320 196 L317.5 198 L318.5 195 L316 193 L319 193 Z" fill="#EF4444"/>
+
+<!-- Shopping cart icon -->
+<rect x="80" y="170" width="4" height="20" fill="#6B7280" rx="2"/>
+<rect x="88" y="170" width="30" height="16" fill="none" stroke="#6B7280" stroke-width="2" rx="2"/>
+<circle cx="92" cy="196" r="3" fill="#6B7280"/>
+<circle cx="110" cy="196" r="3" fill="#6B7280"/>
+
+<!-- Arrow pointing to empty space -->
+<path d="M200 210 Q200 230 220 240" stroke="#9CA3AF" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+
+<!-- Arrow marker -->
+<defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#9CA3AF"/>
+    </marker>
+</defs>
+
+<!-- Floating elements for better visual -->
+<circle cx="300" cy="120" r="2" fill="#28A745" opacity="0.6"/>
+<circle cx="120" cy="80" r="1.5" fill="#17A2B8" opacity="0.6"/>
+<circle cx="280" cy="200" r="2.5" fill="#FFC107" opacity="0.6"/>
+</svg>

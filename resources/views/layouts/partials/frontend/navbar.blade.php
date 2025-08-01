@@ -130,12 +130,54 @@
                             Semua Kategori
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-apple me-2"></i>Buah & Sayuran</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-egg me-2"></i>Daging & Seafood</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-cup-straw me-2"></i>Minuman</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-bag me-2"></i>Makanan Ringan</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-droplet me-2"></i>Kebutuhan Rumah</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart-pulse me-2"></i>Kesehatan & Kecantikan</a></li>
+                            @forelse($categories as $category)
+                                @if($category->children->isNotEmpty())
+                                    <!-- Parent category with children -->
+                                    <li><h6 class="dropdown-header text-success">{{ $category->name }}</h6></li>
+                                    @foreach($category->children as $child)
+                                        <li>
+                                            <a class="dropdown-item ps-4" href="{{ route('categories.show', $child->slug) }}">
+                                                <i class="bi bi-arrow-right-short me-1"></i>
+                                                {{ $child->name }}
+                                                @if($child->products_count > 0)
+                                                    <small class="text-muted">({{ $child->products_count }})</small>
+                                                @endif
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                    @unless($loop->last)
+                                        <li><hr class="dropdown-divider"></li>
+                                    @endunless
+                                @else
+                                    <!-- Single category without children -->
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('categories.show', $category->slug) }}">
+                                            <i class="bi bi-tag me-2"></i>
+                                            {{ $category->name }}
+                                            @if($category->products_count > 0)
+                                                <small class="text-muted">({{ $category->products_count }})</small>
+                                            @endif
+                                        </a>
+                                    </li>
+                                @endif
+                            @empty
+                                <li>
+                                    <span class="dropdown-item-text text-muted">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        Belum ada kategori tersedia
+                                    </span>
+                                </li>
+                            @endforelse
+
+                            @if($categories->isNotEmpty())
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item fw-bold text-success" href="{{ route('categories.index') }}">
+                                        <i class="bi bi-grid-3x3-gap me-2"></i>
+                                        Lihat Semua Kategori
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                     <li class="nav-item">

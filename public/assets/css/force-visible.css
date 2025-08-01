@@ -1,0 +1,49 @@
+/* Force High Contrast CSS - Override all other styles */
+.empty-state-force-visible * {
+    color: #000000 !important;
+    background-color: transparent !important;
+}
+
+.empty-state-force-visible h1,
+.empty-state-force-visible h2,
+.empty-state-force-visible h3,
+.empty-state-force-visible h4,
+.empty-state-force-visible h5,
+.empty-state-force-visible h6 {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+.empty-state-force-visible p {
+    color: #333333 !important;
+    font-weight: 500 !important;
+}
+
+.empty-state-force-visible .btn {
+    font-weight: 700 !important;
+    border-width: 2px !important;
+}
+
+.empty-state-force-visible .btn-success {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+    border-color: #28a745 !important;
+}
+
+.empty-state-force-visible .btn-outline-dark {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+/* Ensure icons are visible */
+.empty-state-force-visible i {
+    opacity: 1 !important;
+}
+
+/* Remove any text-muted or similar */
+.empty-state-force-visible .text-muted,
+.empty-state-force-visible .text-secondary {
+    color: #333333 !important;
+}

@@ -1,0 +1,159 @@
+/* Empty State Styles */
+.empty-state-container {
+    transition: all 0.3s ease;
+}
+
+.empty-state-container:hover {
+    transform: translateY(-2px);
+}
+
+.empty-state-image {
+    transition: transform 0.3s ease;
+}
+
+.empty-state-image:hover {
+    transform: scale(1.05);
+}
+
+/* Enhanced text visibility */
+.empty-state-container h2 {
+    color: #212529 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    font-weight: 700 !important;
+}
+
+.empty-state-container p {
+    color: #495057 !important;
+    font-weight: 500 !important;
+    line-height: 1.6 !important;
+}
+
+.empty-state-container .card-title {
+    color: #212529 !important;
+    font-weight: 600 !important;
+}
+
+.empty-state-container .card-text {
+    color: #495057 !important;
+    font-weight: 400 !important;
+}
+
+/* Pulse animation for empty state icon */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.empty-state-animate {
+    animation: pulse 2s infinite;
+}
+
+/* Newsletter form styles */
+.newsletter-form .form-control {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-weight: 500;
+}
+
+.newsletter-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+}
+
+.newsletter-form .form-control:focus {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+/* Info cards hover effect */
+.info-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05) !important;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+    border-color: rgba(40, 167, 69, 0.2) !important;
+}
+
+/* Button hover animations */
+.btn-empty-action {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-weight: 600 !important;
+    border-width: 2px !important;
+}
+
+.btn-empty-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-empty-action:hover::before {
+    left: 100%;
+}
+
+.btn-empty-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* Loading skeleton for when products are being loaded */
+.product-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .empty-state-container .display-1 {
+        font-size: 3rem;
+    }
+
+    .empty-state-container .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .empty-state-container {
+        color: #e9ecef;
+    }
+
+    .empty-state-container .text-muted {
+        color: #adb5bd !important;
+    }
+}

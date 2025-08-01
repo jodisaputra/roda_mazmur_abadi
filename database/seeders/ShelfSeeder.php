@@ -38,6 +38,42 @@ class ShelfSeeder extends Seeder
                 'is_active' => true,
                 'capacity' => 15,
             ],
+            [
+                'name' => 'Premium Collection',
+                'slug' => 'premium-collection',
+                'is_active' => true,
+                'capacity' => 6,
+            ],
+            [
+                'name' => 'Budget Friendly',
+                'slug' => 'budget-friendly',
+                'is_active' => true,
+                'capacity' => 20,
+            ],
+            [
+                'name' => 'Limited Edition',
+                'slug' => 'limited-edition',
+                'is_active' => true,
+                'capacity' => 5,
+            ],
+            [
+                'name' => 'Gaming Zone',
+                'slug' => 'gaming-zone',
+                'is_active' => true,
+                'capacity' => 8,
+            ],
+            [
+                'name' => 'Productivity Tools',
+                'slug' => 'productivity-tools',
+                'is_active' => true,
+                'capacity' => 10,
+            ],
+            [
+                'name' => 'Entertainment Hub',
+                'slug' => 'entertainment-hub',
+                'is_active' => true,
+                'capacity' => 12,
+            ],
         ];
 
         foreach ($shelves as $shelf) {

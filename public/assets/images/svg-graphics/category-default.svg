@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="categoryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#28a745;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#20c997;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#categoryGrad)" opacity="0.1"/>
+
+  <!-- Main category icon -->
+  <g transform="translate(100,100)">
+    <!-- Grid pattern -->
+    <rect x="-30" y="-30" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="-8" y="-30" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="14" y="-30" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+
+    <rect x="-30" y="-8" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="-8" y="-8" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="14" y="-8" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+
+    <rect x="-30" y="14" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="-8" y="14" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+    <rect x="14" y="14" width="18" height="18" fill="url(#categoryGrad)" rx="3"/>
+  </g>
+
+  <!-- Decorative elements -->
+  <circle cx="50" cy="50" r="3" fill="#28a745" opacity="0.3"/>
+  <circle cx="150" cy="60" r="2" fill="#20c997" opacity="0.4"/>
+  <circle cx="160" cy="140" r="4" fill="#28a745" opacity="0.2"/>
+  <circle cx="40" cy="160" r="2.5" fill="#20c997" opacity="0.3"/>
+</svg>

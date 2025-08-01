@@ -81,4 +81,28 @@ class ProductController extends Controller
 
         return view('frontend.promotions', compact('products'));
     }
+
+    /**
+     * Display single product page
+     */
+    public function show(Product $product)
+    {
+        // Ensure product is active
+        if ($product->status !== 'active') {
+            abort(404);
+        }
+
+        $product->load(['images', 'category']);
+
+        // Get related products from same category
+        $relatedProducts = Product::active()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->with(['images', 'category'])
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
+        return view('frontend.products.show', compact('product', 'relatedProducts'));
+    }
 }
