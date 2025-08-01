@@ -78,13 +78,11 @@
                                                     $isActive = $cat->id == $category->parent_id;
                                                 }
                                             @endphp
-                                            <a class="nav-link {{ $isActive ? 'active' : '' }}"
-                                               href="{{ route('categories.show', $cat->slug) }}">
-                                                <span class="category-name">{{ $cat->name }}</span>
-                                                <span class="badge bg-light text-dark ms-2">{{ $cat->total_products_count ?? $cat->products_count ?? 0 }}</span>
-                                            </a>
-
-                                            <!-- Show child categories always if they exist -->
+                            <a class="nav-link {{ $isActive ? 'active' : '' }}"
+                               href="{{ route('categories.show', $cat->slug) }}">
+                                <span class="category-name">{{ $cat->name }}</span>
+                                <span class="badge {{ $isActive ? 'bg-white bg-opacity-25 text-white' : 'bg-light text-dark' }} ms-2">{{ $cat->total_products_count ?? $cat->products_count ?? 0 }}</span>
+                            </a>                                            <!-- Show child categories always if they exist -->
                                             @if($cat->children && $cat->children->isNotEmpty())
                                                 <ul class="nav nav-pills flex-column ms-3 mt-2">
                                                     @foreach($cat->children as $child)
@@ -93,7 +91,7 @@
                                                                href="{{ route('categories.show', $child->slug) }}">
                                                                 <i class="bi bi-arrow-right-short me-1"></i>
                                                                 <span class="category-name">{{ $child->name }}</span>
-                                                                <span class="badge bg-light text-dark ms-2">{{ $child->products_count ?? 0 }}</span>
+                                                                <span class="badge {{ $child->slug == $category->slug ? 'bg-white bg-opacity-25 text-white' : 'bg-light text-dark' }} ms-2">{{ $child->products_count ?? 0 }}</span>
                                                             </a>
                                                         </li>
                                                     @endforeach
@@ -408,6 +406,12 @@
         color: #fff;
     }
 
+    .nav-pills .nav-link.active .badge {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        color: #fff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
     .nav-pills .nav-link:hover {
         background-color: #f8f9fa;
         color: #0d6efd;
@@ -449,11 +453,51 @@
         border-left-color: #0d6efd;
     }
 
+    /* Badge styles for active nav-links - More specific selectors */
+    .nav-pills .nav-link.active .badge.bg-white {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
     .nav-pills .nav-pills .nav-link.active {
-        background-color: rgba(13, 110, 253, 0.1);
-        color: #0d6efd;
-        border-left-color: #0d6efd;
-        font-weight: 500;
+        background-color: #0d6efd !important;
+        color: #fff !important;
+        border-left-color: #0d6efd !important;
+    }
+
+    .nav-pills .nav-pills .nav-link.active .badge.bg-white {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Additional specific selectors to override Bootstrap */
+    .nav-pills .nav-link.active span.badge,
+    .nav-pills .nav-link.active .badge,
+    a.nav-link.active .badge {
+        background-color: rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        font-weight: 600 !important;
+    }
+
+    .nav-pills .nav-pills .nav-link.active span.badge,
+    .nav-pills .nav-pills .nav-link.active .badge,
+    .nav-pills .nav-pills a.nav-link.active .badge {
+        background-color: rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        font-weight: 600 !important;
+    }
+
+    /* Force override any Bootstrap badge classes */
+    .nav-link.active .badge.bg-light,
+    .nav-link.active .badge.text-dark,
+    .nav-link.active .badge.bg-white {
+        background-color: rgba(255, 255, 255, 0.3) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
     }
 
     .nav-pills .nav-pills .nav-link.active:hover {
