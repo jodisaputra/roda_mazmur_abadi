@@ -36,24 +36,34 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Search bar untuk desktop -->
             <div class="mx-auto d-none d-lg-flex" style="width: 400px;">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Cari produk..." aria-label="Search">
-                    <button class="btn btn-success" type="button">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </div>
+                <form action="{{ route('search') }}" method="GET" class="w-100">
+                    <div class="input-group search-input-group">
+                        <input type="text" name="q" class="form-control search-input"
+                               placeholder="Cari produk..." aria-label="Search"
+                               value="{{ request('q') }}" autocomplete="off">
+                        <button class="btn btn-success" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    <!-- Search Suggestions Dropdown -->
+                    <div class="search-suggestions dropdown-menu w-100" style="display: none;"></div>
+                </form>
             </div>
 
             <!-- Right side items -->
             <ul class="navbar-nav ms-auto align-items-lg-center">
                 <!-- Mobile Search -->
                 <li class="nav-item d-lg-none mb-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Cari produk..." aria-label="Search">
-                        <button class="btn btn-success" type="button">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
+                    <form action="{{ route('search') }}" method="GET" class="w-100">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control"
+                                   placeholder="Cari produk..." aria-label="Search"
+                                   value="{{ request('q') }}">
+                            <button class="btn btn-success" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </li>
 
                 <!-- User Authentication -->
@@ -104,6 +114,172 @@
         </div>
     </div>
 </nav>
+
+<style>
+    .search-input-group {
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .search-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .suggestion-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f8f9fa;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggestion-item:hover {
+        background-color: #f8f9fa;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .suggestion-item:last-child {
+        border-bottom: none;
+    }
+
+    .suggestion-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-right: 12px;
+        background-color: #f8f9fa;
+    }
+
+    .suggestion-content {
+        flex: 1;
+    }
+
+    .suggestion-name {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+        color: #333;
+    }
+
+    .suggestion-price {
+        font-size: 0.8rem;
+        color: #0aad0a;
+        font-weight: 600;
+    }
+
+    .search-input:focus {
+        box-shadow: none;
+        border-color: #0aad0a;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    const suggestionsContainer = document.querySelector('.search-suggestions');
+    let searchTimeout;
+
+    if (searchInput && suggestionsContainer) {
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            clearTimeout(searchTimeout);
+
+            if (query.length < 2) {
+                hideSuggestions();
+                return;
+            }
+
+            // Debounce search requests
+            searchTimeout = setTimeout(() => {
+                fetchSuggestions(query);
+            }, 300);
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-input-group')) {
+                hideSuggestions();
+            }
+        });
+
+        // Show suggestions when focusing on input (if there's content)
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length >= 2) {
+                fetchSuggestions(this.value.trim());
+            }
+        });
+    }
+
+    function fetchSuggestions(query) {
+        fetch(`{{ route('search.suggestions') }}?q=${encodeURIComponent(query)}`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            displaySuggestions(data.suggestions);
+        })
+        .catch(error => {
+            console.error('Search suggestions error:', error);
+            hideSuggestions();
+        });
+    }
+
+    function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+            hideSuggestions();
+            return;
+        }
+
+        let html = '';
+        suggestions.forEach(suggestion => {
+            html += `
+                <a href="${suggestion.url}" class="suggestion-item">
+                    ${suggestion.image
+                        ? `<img src="${suggestion.image}" alt="${suggestion.name}" class="suggestion-image">`
+                        : `<div class="suggestion-image d-flex align-items-center justify-content-center bg-light">
+                             <i class="bi bi-image text-muted"></i>
+                           </div>`
+                    }
+                    <div class="suggestion-content">
+                        <div class="suggestion-name">${suggestion.name}</div>
+                        <div class="suggestion-price">${suggestion.price}</div>
+                    </div>
+                </a>
+            `;
+        });
+
+        suggestionsContainer.innerHTML = html;
+        suggestionsContainer.style.display = 'block';
+    }
+
+    function hideSuggestions() {
+        if (suggestionsContainer) {
+            suggestionsContainer.style.display = 'none';
+        }
+    }
+});
+</script>
 
 <!-- Categories Menu -->
 <div class="bg-light border-top">

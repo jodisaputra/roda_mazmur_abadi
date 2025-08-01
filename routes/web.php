@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FRONTEND\HomeController;
 use App\Http\Controllers\FRONTEND\ProductController as FrontendProductController;
 use App\Http\Controllers\FRONTEND\CategoryController as FrontendCategoryController;
+use App\Http\Controllers\FRONTEND\SearchController;
 use App\Http\Controllers\BACKEND\CategoryController;
 use App\Http\Controllers\BACKEND\ProductController;
 use App\Http\Controllers\BACKEND\DashboardController;
@@ -24,6 +25,10 @@ Route::get('/contact', function() { return view('frontend.contact'); })->name('c
 // Category Routes
 Route::get('/categories', [FrontendCategoryController::class, 'index'])->name('categories.index');
 Route::get('/category/{category:slug}', [FrontendCategoryController::class, 'show'])->name('categories.show');
+
+// Search Routes
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');
 
 Auth::routes();
 

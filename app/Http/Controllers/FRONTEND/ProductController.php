@@ -3,21 +3,27 @@
 namespace App\Http\Controllers\FRONTEND;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Http\Requests\FRONTEND\ProductListRequest;
 use App\Http\Controllers\Controller;
+use App\Services\FrontendProductService;
 
 class ProductController extends Controller
 {
+    protected $productService;
+
+    public function __construct(FrontendProductService $productService)
+    {
+        $this->productService = $productService;
+    }
+
     /**
      * Get product quick view data
      */
     public function quickView(Product $product)
     {
-        // Load necessary relationships
-        $product->load(['images', 'category', 'primaryImage']);
+        $product = $this->productService->getProductForQuickView($product);
 
-        // Check if product is active and in stock
-        if ($product->status !== 'active') {
+        if (!$product) {
             return response()->json([
                 'success' => false,
                 'message' => 'Product not available'
@@ -30,25 +36,19 @@ class ProductController extends Controller
         return response()->json([
             'success' => true,
             'html' => $html,
-            'product' => [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->formatted_price,
-                'stock' => $product->stock_quantity,
-                'in_stock' => $product->in_stock
-            ]
+            'product' => $this->productService->getQuickViewData($product)
         ]);
     }
 
     /**
      * Display all products page
      */
-    public function index()
+    public function index(ProductListRequest $request)
     {
-        $products = Product::with(['category', 'primaryImage'])
-            ->where('status', 'active')
-            ->latest()
-            ->paginate(20);
+        $validated = $request->validated();
+        $perPage = $validated['per_page'] ?? 20;
+
+        $products = $this->productService->getAllActiveProducts($perPage);
 
         return view('frontend.products.index', compact('products'));
     }
@@ -58,11 +58,7 @@ class ProductController extends Controller
      */
     public function newProducts()
     {
-        $products = Product::with(['category', 'primaryImage'])
-            ->where('status', 'active')
-            ->latest()
-            ->take(20)
-            ->get();
+        $products = $this->productService->getNewProducts(20);
 
         return view('frontend.products.new', compact('products'));
     }
@@ -72,12 +68,7 @@ class ProductController extends Controller
      */
     public function promotions()
     {
-        // For now, just show all products with a "promotion" view
-        $products = Product::with(['category', 'primaryImage'])
-            ->where('status', 'active')
-            ->latest()
-            ->take(20)
-            ->get();
+        $products = $this->productService->getPromotionProducts(20);
 
         return view('frontend.promotions', compact('products'));
     }
@@ -87,21 +78,15 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        // Ensure product is active
-        if ($product->status !== 'active') {
+        // Ensure product is accessible
+        if (!$this->productService->isProductAccessible($product)) {
             abort(404);
         }
 
         $product->load(['images', 'category']);
 
-        // Get related products from same category
-        $relatedProducts = Product::active()
-            ->where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->with(['images', 'category'])
-            ->inRandomOrder()
-            ->take(4)
-            ->get();
+        // Get related products
+        $relatedProducts = $this->productService->getRelatedProducts($product, 4);
 
         return view('frontend.products.show', compact('product', 'relatedProducts'));
     }
