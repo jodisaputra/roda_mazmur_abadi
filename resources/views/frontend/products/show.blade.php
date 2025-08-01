@@ -80,17 +80,15 @@
                         <!-- Product title -->
                         <h1 class="mb-1">{{ $product->name }}</h1>
 
-                        <!-- Rating (placeholder for future implementation) -->
-                        <div class="mb-4">
-                            <small class="text-warning">
-                                @for($i = 1; $i <= 5; $i++)
-                                    ★
-                                @endfor
-                            </small>
-                            <a href="#!" class="ms-2">(30 reviews)</a>
-                        </div>
-
-                        <!-- Price -->
+        <!-- Rating (placeholder for future implementation) -->
+        <div class="mb-4">
+            <small class="text-warning">
+                @for($i = 1; $i <= 5; $i++)
+                    ★
+                @endfor
+            </small>
+            <span class="ms-2 text-muted">(Product Rating)</span>
+        </div>                        <!-- Price -->
                         <div class="fs-4">
                             <span class="fw-bold text-dark">Rp {{ number_format($product->price, 0, ',', '.') }}</span>
                         </div>
@@ -171,144 +169,83 @@
         </div>
     </section>
 
-    <!-- Product Details Tabs -->
+    <!-- Product Information Section -->
     <section class="mt-lg-14 mt-8">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <ul class="nav nav-pills nav-lb-tab" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="product-tab" data-bs-toggle="pill" data-bs-target="#product-tab-pane" type="button" role="tab" aria-controls="product-tab-pane" aria-selected="true">
-                                Product Details
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="details-tab" data-bs-toggle="pill" data-bs-target="#details-tab-pane" type="button" role="tab" aria-controls="details-tab-pane" aria-selected="false">
-                                Information
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="pill" data-bs-target="#reviews-tab-pane" type="button" role="tab" aria-controls="reviews-tab-pane" aria-selected="false">
-                                Reviews
-                            </button>
-                        </li>
-                    </ul>
-
-                    <!-- Tab content -->
-                    <div class="tab-content" id="myTabContent">
-                        <!-- Product Details Tab -->
-                        <div class="tab-pane fade show active" id="product-tab-pane" role="tabpanel" aria-labelledby="product-tab" tabindex="0">
-                            <div class="my-8">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        @if($product->description)
-                                            <p class="mb-0">{{ $product->description }}</p>
-                                        @else
-                                            <p class="mb-0">Product description will be available soon.</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h4 class="mb-0 text-dark">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Product Information
+                            </h4>
                         </div>
-
-                        <!-- Information Tab -->
-                        <div class="tab-pane fade" id="details-tab-pane" role="tabpanel" aria-labelledby="details-tab" tabindex="0">
-                            <div class="my-8">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Product Code</td>
-                                                        <td>{{ $product->sku ?? 'FBT-' . $product->id }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Category</td>
-                                                        <td>{{ $product->category->name }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Stock Quantity</td>
-                                                        <td>{{ $product->stock_quantity }} items</td>
-                                                    </tr>
-                                                    @if($product->shelf)
-                                                        <tr>
-                                                            <td>Shelf</td>
-                                                            <td>{{ $product->shelf->name }}</td>
-                                                        </tr>
-                                                    @endif
-                                                    <tr>
-                                                        <td>Status</td>
-                                                        <td>
-                                                            @if($product->stock_quantity > 0)
-                                                                <span class="badge bg-success">Available</span>
-                                                            @else
-                                                                <span class="badge bg-danger">Out of Stock</span>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                        <div class="card-body p-4">
+                            <div class="row">
+                                <!-- Description Section -->
+                                <div class="col-lg-8 col-md-7">
+                                    <h5 class="mb-3 text-dark">Description</h5>
+                                    @if($product->description)
+                                        <p class="text-muted">{{ $product->description }}</p>
+                                    @else
+                                        <p class="text-muted">Product description will be available soon.</p>
+                                    @endif
                                 </div>
-                            </div>
-                        </div>
 
-                        <!-- Reviews Tab -->
-                        <div class="tab-pane fade" id="reviews-tab-pane" role="tabpanel" aria-labelledby="reviews-tab" tabindex="0">
-                            <div class="my-8">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="me-lg-12 mb-6 mb-md-0">
-                                            <div class="mb-5">
-                                                <h6 class="mb-3">Customer reviews</h6>
-                                                <div class="d-flex align-items-center mb-2">
-                                                    <div class="text-warning">
-                                                        <small>
-                                                            ★★★★★
-                                                        </small>
-                                                    </div>
-                                                    <span class="ms-3">4.1 out of 5</span>
-                                                </div>
-                                                <p class="fs-6 text-muted">11,130 global ratings</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-8">
-                                        <div class="mb-10">
-                                            <div class="d-flex justify-content-between align-items-center mb-8">
-                                                <div>
-                                                    <h5>Reviews</h5>
-                                                </div>
-                                                <div>
-                                                    <a href="#" class="btn btn-outline-gray-400 btn-sm">Write a Review</a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex border-bottom pb-6 mb-6">
-                                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 3rem; height: 3rem; font-size: 1.2rem; font-weight: bold;">
-                                                    S
-                                                </div>
-                                                <div class="ms-1">
-                                                    <h6 class="mb-1">Shankar Subbaraman</h6>
-                                                    <p class="small">
-                                                        <span class="text-muted">30 December 2022</span>
-                                                        <span class="text-primary ms-3 fw-bold">Verified Purchase</span>
-                                                    </p>
-                                                    <div class="d-flex align-items-center mb-2">
-                                                        <div class="text-warning">
-                                                            <small>★★★★★</small>
-                                                        </div>
-                                                        <span class="ms-3 text-dark fw-bold">Great product quality!</span>
-                                                    </div>
-                                                    <p>
-                                                        Product quality is excellent. Fast delivery and great packaging.
-                                                        Would definitely recommend this product to others.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <!-- Specifications Section -->
+                                <div class="col-lg-4 col-md-5">
+                                    <h5 class="mb-3 text-dark">Specifications</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-borderless">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-muted fw-normal">Product Code:</td>
+                                                    <td class="fw-medium">{{ $product->sku ?? 'FBT-' . $product->id }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted fw-normal">Category:</td>
+                                                    <td>
+                                                        <a href="{{ route('categories.show', $product->category->slug) }}"
+                                                           class="text-primary text-decoration-none fw-medium">
+                                                            {{ $product->category->name }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted fw-normal">Stock:</td>
+                                                    <td class="fw-medium">{{ $product->stock_quantity }} items</td>
+                                                </tr>
+                                                @if($product->shelf)
+                                                    <tr>
+                                                        <td class="text-muted fw-normal">Shelf:</td>
+                                                        <td class="fw-medium">{{ $product->shelf->name }}</td>
+                                                    </tr>
+                                                @endif
+                                                <tr>
+                                                    <td class="text-muted fw-normal">Status:</td>
+                                                    <td>
+                                                        @if($product->stock_quantity > 0)
+                                                            <span class="badge bg-success text-white">
+                                                                <i class="bi bi-check-circle me-1"></i>
+                                                                Available
+                                                            </span>
+                                                        @else
+                                                            <span class="badge bg-danger text-white">
+                                                                <i class="bi bi-x-circle me-1"></i>
+                                                                Out of Stock
+                                                            </span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-muted fw-normal">Price:</td>
+                                                    <td class="fw-bold text-primary fs-5">
+                                                        Rp {{ number_format($product->price, 0, ',', '.') }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

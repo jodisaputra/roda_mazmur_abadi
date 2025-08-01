@@ -70,6 +70,17 @@ class Category extends Model
     }
 
     /**
+     * Get all products including from child categories
+     */
+    public function allProducts()
+    {
+        $childCategoryIds = $this->children()->pluck('id')->toArray();
+        $allCategoryIds = array_merge([$this->id], $childCategoryIds);
+
+        return Product::whereIn('category_id', $allCategoryIds);
+    }
+
+    /**
      * Scope for active categories
      */
     public function scopeActive($query)

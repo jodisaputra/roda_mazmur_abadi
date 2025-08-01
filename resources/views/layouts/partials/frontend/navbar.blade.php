@@ -133,7 +133,14 @@
                             @forelse($categories as $category)
                                 @if($category->children->isNotEmpty())
                                     <!-- Parent category with children -->
-                                    <li><h6 class="dropdown-header text-success">{{ $category->name }}</h6></li>
+                                    <li>
+                                        <h6 class="dropdown-header text-success">
+                                            {{ $category->name }}
+                                            @if($category->total_products_count > 0)
+                                                <small class="text-muted">({{ $category->total_products_count }})</small>
+                                            @endif
+                                        </h6>
+                                    </li>
                                     @foreach($category->children as $child)
                                         <li>
                                             <a class="dropdown-item ps-4" href="{{ route('categories.show', $child->slug) }}">
