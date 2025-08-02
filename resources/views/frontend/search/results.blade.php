@@ -187,6 +187,23 @@
                                 </a>
                             </div>
 
+                            <!-- Category Suggestions -->
+                            @if($selectedCategory && $categories->where('products_count', '>', 0)->count() > 0)
+                            <div class="mt-4">
+                                <h6 class="text-muted mb-3">Try searching in these categories:</h6>
+                                <div class="row g-2 justify-content-center">
+                                    @foreach($categories->where('products_count', '>', 0)->take(6) as $suggestedCategory)
+                                        <div class="col-auto">
+                                            <a href="{{ route('search', ['q' => $query, 'category' => $suggestedCategory->slug]) }}"
+                                               class="btn btn-sm btn-outline-success">
+                                                {{ $suggestedCategory->name }} ({{ $suggestedCategory->products_count }})
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+
                             <!-- Search Suggestions -->
                             <div class="mt-5">
                                 <h6 class="text-muted mb-3">Try these suggestions:</h6>
@@ -194,7 +211,7 @@
                                     <li class="text-muted">• Check your spelling</li>
                                     <li class="text-muted">• Use different keywords</li>
                                     <li class="text-muted">• Try more general terms</li>
-                                    <li class="text-muted">• Browse our categories</li>
+                                    <li class="text-muted">• Browse our categories with products above</li>
                                 </ul>
                             </div>
                         </div>

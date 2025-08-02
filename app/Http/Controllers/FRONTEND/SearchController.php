@@ -65,6 +65,18 @@ class SearchController extends Controller
         $validated = $request->validated();
         $suggestions = $this->searchService->getSearchSuggestions($validated['q'] ?? '', 5);
 
-        return response()->json(['suggestions' => $suggestions]);
+        // Format suggestions with proper URLs
+        $formattedSuggestions = $suggestions->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => 'Rp ' . number_format($product->price, 0, ',', '.'),
+                'url' => route('products.show', $product->slug),
+                'image' => null // Will add later if needed
+            ];
+        });
+
+        return response()->json(['suggestions' => $formattedSuggestions]);
     }
 }

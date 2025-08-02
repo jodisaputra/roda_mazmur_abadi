@@ -52,7 +52,7 @@
                         <p class="text-muted mb-0">Pilihan terbaik untuk kebutuhan Anda</p>
                     </div>
                     <div class="col-auto">
-                        <a href="#" class="btn btn-outline-success">
+                        <a href="{{ route('products.index') }}" class="btn btn-outline-success">
                             Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
@@ -69,7 +69,7 @@
                                     <span class="badge bg-danger position-absolute top-0 start-0 m-2">-{{ rand(10,30) }}%</span>
                                     @endif
 
-                                    <a href="#" class="d-block">
+                                    <a href="{{ route('products.show', $product->slug) }}" class="d-block">
                                         <img src="{{ $product->primary_image_url }}"
                                              alt="{{ $product->name }}"
                                              class="img-fluid rounded"
@@ -87,13 +87,17 @@
                                 </div>
 
                                 <div class="text-small mb-1">
-                                    <a href="#" class="text-decoration-none text-success">
-                                        <small>{{ $product->category->name ?? 'Uncategorized' }}</small>
+                                    @if($product->category && $product->category->slug)
+                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="text-decoration-none text-success">
+                                        <small>{{ $product->category->name }}</small>
                                     </a>
+                                    @else
+                                    <small class="text-success">Uncategorized</small>
+                                    @endif
                                 </div>
 
                                 <h6 class="card-title mb-2">
-                                    <a href="#" class="text-inherit text-decoration-none">{{ Str::limit($product->name, 40) }}</a>
+                                    <a href="{{ route('products.show', $product->slug) }}" class="text-inherit text-decoration-none">{{ Str::limit($product->name, 40) }}</a>
                                 </h6>
 
                                 <!-- Rating -->

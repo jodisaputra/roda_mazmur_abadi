@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            console.log('Suggestions response:', data); // Debug log
             displaySuggestions(data.suggestions);
         })
         .catch(error => {
@@ -246,6 +247,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displaySuggestions(suggestions) {
+        console.log('Displaying suggestions:', suggestions); // Debug log
+
         if (suggestions.length === 0) {
             hideSuggestions();
             return;
@@ -253,8 +256,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let html = '';
         suggestions.forEach(suggestion => {
+            // Ensure we have a valid URL with fallback
+            const productUrl = suggestion.url || `{{ url('/product') }}/${suggestion.slug}`;
+            console.log('Product URL for', suggestion.name, ':', productUrl); // Debug log
+
             html += `
-                <a href="${suggestion.url}" class="suggestion-item">
+                <a href="${productUrl}" class="suggestion-item">
                     ${suggestion.image
                         ? `<img src="${suggestion.image}" alt="${suggestion.name}" class="suggestion-image">`
                         : `<div class="suggestion-image d-flex align-items-center justify-content-center bg-light">
