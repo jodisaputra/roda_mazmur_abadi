@@ -53,6 +53,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::post('products/generate-sku', [ProductController::class, 'generateSku'])->name('products.generate-sku');
     Route::post('products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 
+    // Product Import
+    Route::get('products/import/form', [ProductController::class, 'showImport'])->name('products.show-import');
+    Route::post('products/import', [ProductController::class, 'import'])->name('products.import');
+    Route::get('products/import/template', [ProductController::class, 'downloadTemplate'])->name('products.download-template');
+
     // Shelves
     Route::resource('shelves', ShelfController::class);
     Route::get('shelves/{shelf}/manage-products', [ShelfController::class, 'manageProducts'])->name('shelves.manage-products');

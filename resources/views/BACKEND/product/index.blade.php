@@ -20,7 +20,10 @@
                         </nav>
                     </div>
                     <!-- button -->
-                    <div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('admin.products.show-import') }}" class="btn btn-outline-success">
+                            <i class="bi bi-file-earmark-spreadsheet"></i> Import Excel
+                        </a>
                         <a href="{{ route('admin.products.create') }}" class="btn btn-primary">Add New Product</a>
                     </div>
                 </div>
