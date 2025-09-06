@@ -2,6 +2,73 @@
 
 @section('title', 'Homepage - FreshCart')
 
+@push('styles')
+<style>
+    /* Horizontal scroll for mobile - Simple and safe approach */
+    @media (max-width: 767.98px) {
+        /* Main scrollable container */
+        .products-scroll {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0 1rem 10px 1rem;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .products-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .product-item-mobile {
+            flex: 0 0 160px;
+            width: 160px;
+        }
+
+        .card-product .card-body {
+            padding: 0.75rem 0.5rem;
+        }
+
+        .card-product h6 {
+            font-size: 0.85rem;
+            line-height: 1.2;
+        }
+
+        .section-header {
+            padding-left: 1rem;
+        }
+    }
+
+    /* Desktop and larger screens */
+    @media (min-width: 768px) {
+        .products-scroll {
+            display: block;
+        }
+    }
+
+    /* Product card basic styling */
+    .card-product {
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    /* Badge improvements */
+    .badge.bg-danger {
+        font-size: 0.7rem;
+        border-radius: 15px;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Rating stars sizing */
+    .bi-star, .bi-star-fill {
+        color: #ffc107;
+    }
+</style>
+@endpush
+
 @section('content')
     <!-- Hero Slider Section - Bootstrap Carousel -->
     <section class="hero-section">
@@ -46,80 +113,153 @@
         @if($shelf->activeProducts->isNotEmpty())
         <section class="py-4 {{ $loop->even ? 'bg-light' : '' }}">
             <div class="container">
-                <div class="row align-items-center mb-4">
+                <!-- Section Header -->
+                <div class="row align-items-center mb-4 section-header">
                     <div class="col">
                         <h3 class="mb-0 fw-bold">{{ $shelf->name }}</h3>
-                        <p class="text-muted mb-0">Pilihan terbaik untuk kebutuhan Anda</p>
+                        <p class="text-muted mb-0 d-none d-md-block">Pilihan terbaik untuk kebutuhan Anda</p>
                     </div>
                     <div class="col-auto">
-                        <a href="{{ route('products.index') }}" class="btn btn-outline-success">
-                            Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                        <a href="{{ route('shelf.show', $shelf->slug) }}" class="btn btn-outline-success btn-sm">
+                            <span class="d-none d-sm-inline">Lihat Semua</span>
+                            <span class="d-inline d-sm-none">Semua</span>
+                            <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="row g-4 row-cols-lg-5 row-cols-2 row-cols-md-3">
-                    @foreach($shelf->activeProducts->take(10) as $product)
-                    <div class="col">
-                        <div class="card card-product h-100 shadow-sm border-0">
-                            <div class="card-body p-3">
-                                <div class="text-center position-relative mb-3">
-                                    <!-- Discount badge -->
-                                    @if(rand(1,3) == 1)
-                                    <span class="badge bg-danger position-absolute top-0 start-0 m-2">-{{ rand(10,30) }}%</span>
-                                    @endif
+                <!-- Products Container - Horizontal scroll on mobile, grid on desktop -->
+                <div class="products-container">
+                    <!-- Mobile: Horizontal Scroll -->
+                    <div class="products-scroll d-md-none">
+                        @foreach($shelf->activeProducts->take(6) as $product)
+                        <div class="product-item-mobile">
+                            <div class="card card-product shadow-sm border-0">
+                                <div class="card-body">
+                                    <div class="text-center position-relative mb-3">
+                                        <!-- Discount badge -->
+                                        @if(rand(1,3) == 1)
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-1 small">-{{ rand(10,30) }}%</span>
+                                        @endif
 
-                                    <a href="{{ route('products.show', $product->slug) }}" class="d-block">
-                                        <img src="{{ $product->primary_image_url }}"
-                                             alt="{{ $product->name }}"
-                                             class="img-fluid rounded"
-                                             style="height: 150px; width: 100%; object-fit: cover;" />
-                                    </a>
-
-                                    <div class="card-product-action">
-                                        <a href="#" class="btn-action quick-view-btn"
-                                            data-bs-toggle="modal" data-bs-target="#quickViewModal"
-                                            data-product-id="{{ $product->id }}" onclick="loadQuickViewProduct({{ $product->id }}); return false;">
-                                            <i class="bi bi-eye" data-bs-toggle="tooltip" data-bs-html="true"
-                                                title="Quick View"></i>
+                                        <!-- Product Image -->
+                                        <a href="#" onclick="showQuickView({{ $product->id }}); return false;" class="d-block">
+                                            <img src="{{ $product->primary_image_url }}"
+                                                 alt="{{ $product->name }}"
+                                                 class="img-fluid rounded"
+                                                 style="height: 120px; width: 100%; object-fit: cover;" />
                                         </a>
                                     </div>
-                                </div>
 
-                                <div class="text-small mb-1">
-                                    @if($product->category && $product->category->slug)
-                                    <a href="{{ route('categories.show', $product->category->slug) }}" class="text-decoration-none text-success">
-                                        <small>{{ $product->category->name }}</small>
-                                    </a>
-                                    @else
-                                    <small class="text-success">Uncategorized</small>
-                                    @endif
-                                </div>
+                                    <!-- Product Category -->
+                                    <div class="text-small mb-1">
+                                        @if($product->category && $product->category->slug)
+                                        <a href="{{ route('categories.show', $product->category->slug) }}" class="text-decoration-none text-success">
+                                            <small>{{ $product->category->name }}</small>
+                                        </a>
+                                        @else
+                                        <small class="text-success">Uncategorized</small>
+                                        @endif
+                                    </div>
 
-                                <h6 class="card-title mb-2">
-                                    <a href="{{ route('products.show', $product->slug) }}" class="text-inherit text-decoration-none">{{ Str::limit($product->name, 40) }}</a>
-                                </h6>
+                                    <!-- Product Title -->
+                                    <h6 class="card-title mb-2">
+                                        <a href="#" onclick="showQuickView({{ $product->id }}); return false;" class="text-inherit text-decoration-none">
+                                            {{ Str::limit($product->name, 30) }}
+                                        </a>
+                                    </h6>
 
-                                <!-- Rating -->
-                                <div class="mb-2">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="bi bi-star{{ $i <= 4 ? '-fill' : '' }} text-warning small"></i>
-                                    @endfor
-                                    <small class="text-muted ms-1">({{ rand(10,99) }})</small>
-                                </div>
+                                    <!-- Mobile Rating -->
+                                    <div class="mb-2">
+                                        @for($i = 1; $i <= 4; $i++)
+                                            <i class="bi bi-star-fill text-warning" style="font-size: 0.7rem;"></i>
+                                        @endfor
+                                        <i class="bi bi-star text-warning" style="font-size: 0.7rem;"></i>
+                                        <small class="text-muted ms-1">({{ rand(10,99) }})</small>
+                                    </div>
 
-                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Price -->
                                     <div>
-                                        <span class="text-dark fw-bold">{{ $product->formatted_price }}</span>
+                                        <span class="text-dark fw-bold small">{{ $product->formatted_price }}</span>
                                         @if(rand(1,3) == 1)
-                                        <br><small class="text-decoration-line-through text-muted">Rp {{ number_format($product->price * 1.3, 0, ',', '.') }}</small>
+                                        <br><small class="text-decoration-line-through text-muted" style="font-size: 0.7rem;">Rp {{ number_format($product->price * 1.3, 0, ',', '.') }}</small>
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                     </div>
-                    @endforeach
+
+                    <!-- Desktop: Grid Layout -->
+                    <div class="row g-3 g-md-4 d-none d-md-flex">
+                        @foreach($shelf->activeProducts->take(6) as $product)
+                        <div class="col-6 col-lg-2 col-md-3">
+                            <div class="card card-product h-100 shadow-sm border-0">
+                                <div class="card-body p-2 p-md-3">
+                                    <div class="text-center position-relative mb-3">
+                                        <!-- Discount badge -->
+                                        @if(rand(1,3) == 1)
+                                        <span class="badge bg-danger position-absolute top-0 start-0 m-1 m-md-2 small">-{{ rand(10,30) }}%</span>
+                                        @endif
+
+                                        <!-- Product Image -->
+                                        <a href="#" onclick="showQuickView({{ $product->id }}); return false;" class="d-block">
+                                            <img src="{{ $product->primary_image_url }}"
+                                                 alt="{{ $product->name }}"
+                                                 class="img-fluid rounded"
+                                                 style="height: 120px; width: 100%; object-fit: cover;" />
+                                        </a>
+
+                                        <!-- Quick View Action - Desktop only -->
+                                        <div class="card-product-action">
+                                            <a href="#" class="btn-action quick-view-btn"
+                                                onclick="showQuickView({{ $product->id }}); return false;">
+                                                <i class="bi bi-eye" data-bs-toggle="tooltip" title="Quick View"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Category -->
+                                    <div class="text-small mb-1">
+                                        @if($product->category && $product->category->slug)
+                                        <a href="{{ route('categories.show', $product->category->slug) }}" class="text-decoration-none text-success">
+                                            <small>{{ $product->category->name }}</small>
+                                        </a>
+                                        @else
+                                        <small class="text-success">Uncategorized</small>
+                                        @endif
+                                    </div>
+
+                                    <!-- Product Title -->
+                                    <h6 class="card-title mb-2 lh-sm">
+                                        <a href="#" onclick="showQuickView({{ $product->id }}); return false;" class="text-inherit text-decoration-none">
+                                            {{ Str::limit($product->name, 35) }}
+                                        </a>
+                                    </h6>
+
+                                    <!-- Desktop Rating -->
+                                    <div class="mb-2">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="bi bi-star{{ $i <= 4 ? '-fill' : '' }} text-warning small"></i>
+                                        @endfor
+                                        <small class="text-muted ms-1">({{ rand(10,99) }})</small>
+                                    </div>
+
+                                    <!-- Price -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="text-dark fw-bold small">{{ $product->formatted_price }}</span>
+                                            @if(rand(1,3) == 1)
+                                            <br><small class="text-decoration-line-through text-muted" style="font-size: 0.75rem;">Rp {{ number_format($product->price * 1.3, 0, ',', '.') }}</small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
         </section>
@@ -134,7 +274,6 @@
         ])
     @endforelse
     <!-- Products End-->
-@endsection
 
 {{-- Include Quick View Modal --}}
 @include('partials.quick-view-modal')
@@ -147,65 +286,67 @@
         console.log('Bootstrap version:', typeof bootstrap !== 'undefined' ? 'Loaded' : 'Not loaded');
 
         // Function to load quick view content - available globally
-        function loadQuickViewProduct(productId) {
-            console.log('Loading quick view for product:', productId);
+        function showQuickView(productId) {
+            console.log('showQuickView called with productId:', productId);
 
-            const contentContainer = document.getElementById('quickViewContent');
-            if (!contentContainer) {
-                console.error('Quick view content container not found');
-                return;
-            }
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+            modal.show();
 
-            // Show loading spinner
-            contentContainer.innerHTML = `
+            // Reset content to loading state
+            document.getElementById('quickViewContent').innerHTML = `
                 <div class="col-12 text-center py-5">
-                    <div class="spinner-border" role="status">
+                    <div class="spinner-border text-success" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <p class="mt-3">Loading product details...</p>
+                    <p class="mt-3" style="color: #333333 !important;">Memuat detail produk...</p>
                 </div>
             `;
 
-            // Fetch product data
-            fetch('/product/' + productId + '/quick-view', {
+            // Load product details via AJAX
+            const url = `/product/${productId}/quick-view`;
+            console.log('Fetching from URL:', url);
+
+            fetch(url, {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
                 }
             })
             .then(response => {
-                console.log('Response status:', response.status);
+                console.log('Response received:', response);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 return response.json();
             })
             .then(data => {
-                console.log('Response data:', data);
-                if (data.success) {
-                    contentContainer.innerHTML = data.html;
-                    console.log('Quick view content loaded successfully');
-
-                    // Setup thumbnail listeners after content loads
-                    setupThumbnailListeners();
+                console.log('Data received:', data);
+                if (data.html) {
+                    document.getElementById('quickViewContent').innerHTML = data.html;
+                } else if (data.success === false) {
+                    throw new Error(data.message || 'Product not available');
                 } else {
-                    contentContainer.innerHTML = `
-                        <div class="col-12 text-center py-5">
-                            <p class="text-danger">Error: ${data.message || 'Loading product details failed'}</p>
-                        </div>
-                    `;
+                    throw new Error('No content received');
                 }
             })
             .catch(error => {
-                console.error('Fetch error:', error);
-                contentContainer.innerHTML = `
+                console.error('Error loading product details:', error);
+                document.getElementById('quickViewContent').innerHTML = `
                     <div class="col-12 text-center py-5">
-                        <p class="text-danger">Error loading product details. Please try again.</p>
-                        <p class="text-muted small">${error.message}</p>
+                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3">Gagal Memuat Detail</h5>
+                        <p class="text-muted">Terjadi kesalahan saat memuat detail produk: ${error.message}</p>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
                     </div>
                 `;
             });
         }
 
-        // Global function to setup thumbnail listeners
+        function loadQuickViewProduct(productId) {
+            showQuickView(productId);
+        }        // Global function to setup thumbnail listeners
         function setupThumbnailListeners() {
             console.log('Setting up thumbnail listeners from homepage script');
 
@@ -290,3 +431,5 @@
         });
     </script>
 @endpush
+
+@endsection

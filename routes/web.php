@@ -26,6 +26,11 @@ Route::get('/contact', function() { return view('frontend.contact'); })->name('c
 Route::get('/categories', [FrontendCategoryController::class, 'index'])->name('categories.index');
 Route::get('/category/{category:slug}', [FrontendCategoryController::class, 'show'])->name('categories.show');
 
+// Shelf Routes
+# Shelf Routes
+Route::get('/shelf/{shelf:slug}', [FrontendProductController::class, 'showShelf'])->name('shelf.show');
+Route::get('/shelf/{shelf:slug}/category/{category:slug}/products', [FrontendProductController::class, 'loadMoreCategoryProducts'])->name('shelf.category.products');
+
 // Search Routes
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');

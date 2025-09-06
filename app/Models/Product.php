@@ -125,4 +125,37 @@ class Product extends Model
         // Return default product image if no primary image
         return asset('template/assets/images/default-product.svg');
     }
+
+    /**
+     * Get discount percentage (placeholder for future implementation)
+     */
+    public function getDiscountPercentageAttribute(): int
+    {
+        // For now, return 0 as discount feature is not implemented yet
+        return 0;
+    }
+
+    /**
+     * Get formatted original price (for when discount is implemented)
+     */
+    public function getFormattedOriginalPriceAttribute(): string
+    {
+        return 'Rp ' . number_format($this->price, 0, ',', '.');
+    }
+
+    /**
+     * Get stock status based on stock quantity
+     */
+    public function getStockStatusAttribute(): string
+    {
+        if (!$this->in_stock || $this->stock_quantity <= 0) {
+            return 'out_of_stock';
+        }
+
+        if ($this->stock_quantity <= 10) {
+            return 'low_stock';
+        }
+
+        return 'in_stock';
+    }
 }

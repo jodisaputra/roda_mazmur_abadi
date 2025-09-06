@@ -39,30 +39,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
                         </div>
                         <div class="offcanvas-body ps-lg-2 pt-lg-0">
-                            <!-- Category info card -->
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        @if($category->image)
-                                            <img src="{{ Storage::url($category->image) }}"
-                                                 alt="{{ $category->name }}"
-                                                 class="img-fluid rounded mb-3"
-                                                 style="width: 100px; height: 100px; object-fit: cover;">
-                                        @else
-                                            <img src="{{ asset('assets/images/svg-graphics/category-default.svg') }}"
-                                                 alt="Category Icon"
-                                                 class="img-fluid mb-3"
-                                                 style="width: 100px; height: 100px;">
-                                        @endif
-                                        <h5 class="card-title">{{ $category->name }}</h5>
-                                        @if($category->description)
-                                            <p class="card-text text-muted small">{{ $category->description }}</p>
-                                        @endif
-                                        <span class="badge bg-light text-dark">{{ $products->total() }} Products</span>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Categories Filter -->
                             <div class="py-4">
                                 <h5 class="mb-3">Categories</h5>

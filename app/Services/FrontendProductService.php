@@ -34,6 +34,150 @@ class FrontendProductService
     }
 
     /**
+     * Get all active shelves with product counts (for shelves index page)
+     */
+    public function getAllShelvesWithCounts(): Collection
+    {
+        return \App\Models\Shelf::active()
+            ->withCount(['products as products_count' => function ($query) {
+                $query->where('status', 'active')->where('in_stock', true);
+            }])
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Get products for a specific shelf with pagination
+     */
+    public function getShelfProducts(\App\Models\Shelf $shelf, string $sort = 'name_asc', int $perPage = 12): LengthAwarePaginator
+    {
+        $query = $shelf->products()
+            ->where('products.status', 'active')
+            ->where('products.in_stock', true)
+            ->with(['primaryImage', 'category']);
+
+        // Apply sorting
+        switch ($sort) {
+            case 'name_asc':
+                $query->orderBy('products.name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('products.name', 'desc');
+                break;
+            case 'price_low':
+                $query->orderBy('products.price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('products.price', 'desc');
+                break;
+            case 'latest':
+                $query->orderBy('products.created_at', 'desc');
+                break;
+            case 'oldest':
+                $query->orderBy('products.created_at', 'asc');
+                break;
+            default:
+                $query->orderBy('product_shelf.sort_order');
+                break;
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    /**
+     * Get categories with products for a specific shelf (grouped by category)
+     */
+    public function getShelfCategoriesWithProducts(\App\Models\Shelf $shelf, string $sort = 'name_asc', ?string $categoryFilter = null): Collection
+    {
+        // Get all categories that have products in this shelf
+        $categories = \App\Models\Category::whereHas('products', function($query) use ($shelf) {
+            $query->whereHas('shelves', function($subQuery) use ($shelf) {
+                $subQuery->where('shelves.id', $shelf->id);
+            })
+            ->where('status', 'active')
+            ->where('in_stock', true);
+        })
+        ->with(['products' => function($query) use ($shelf, $sort) {
+            $query->whereHas('shelves', function($subQuery) use ($shelf) {
+                $subQuery->where('shelves.id', $shelf->id);
+            })
+            ->where('status', 'active')
+            ->where('in_stock', true)
+            ->with(['primaryImage', 'category']);
+
+            // Apply sorting
+            switch ($sort) {
+                case 'name_asc':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('name', 'desc');
+                    break;
+                case 'price_low':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_high':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'latest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                default:
+                    $query->orderBy('name', 'asc');
+                    break;
+            }
+        }])
+        ->orderBy('name')
+        ->get();
+
+        // Filter by specific category if requested
+        if ($categoryFilter) {
+            $categories = $categories->filter(function($category) use ($categoryFilter) {
+                return $category->slug === $categoryFilter;
+            });
+        }
+
+        return $categories;
+    }
+
+    /**
+     * Get shelves with their products for products page
+     */
+    public function getShelvesWithProducts(int $page = 1, int $perPage = 12): Collection
+    {
+        $offset = ($page - 1) * $perPage;
+
+        $shelves = \App\Models\Shelf::active()
+            ->with(['products' => function ($query) {
+                $query->where('status', 'active')
+                      ->where('in_stock', true)
+                      ->with(['primaryImage', 'category'])
+                      ->orderBy('product_shelf.sort_order');
+            }])
+            ->get();
+
+        // Process each shelf to get paginated products
+        return $shelves->map(function($shelf) use ($offset, $perPage) {
+            $allProducts = $shelf->products;
+            $shelf->totalProducts = $allProducts->count();
+
+            // Get products for current page
+            $shelf->activeProducts = $allProducts->skip($offset)->take($perPage);
+
+            // Check if there are more products
+            $shelf->moreProducts = $allProducts->count() > ($offset + $perPage);
+
+            return $shelf;
+        })->filter(function($shelf) {
+            // Only return shelves that have products to show
+            return $shelf->activeProducts->isNotEmpty();
+        });
+    }
+
+    /**
      * Get new/latest products
      */
     public function getNewProducts(int $limit = 20): Collection
